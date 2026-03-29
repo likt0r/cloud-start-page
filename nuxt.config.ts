@@ -43,7 +43,7 @@ export default defineNuxtConfig({
     tsConfig: {
       compilerOptions: {
         paths: {
-          'nuxt-oidc-auth/runtime/server/utils/session.mjs': [
+          'nuxt-oidc-auth/runtime/server/utils/session.js': [
             '../node_modules/nuxt-oidc-auth/dist/runtime/server/utils/session'
           ]
         }
@@ -52,11 +52,15 @@ export default defineNuxtConfig({
   },
 
   nitro: {
+    externals: {
+      inline: [],
+      external: ['bun:sqlite']
+    },
     typescript: {
       tsConfig: {
         compilerOptions: {
           paths: {
-            'nuxt-oidc-auth/runtime/server/utils/session.mjs': [
+            'nuxt-oidc-auth/runtime/server/utils/session.js': [
               '../node_modules/nuxt-oidc-auth/dist/runtime/server/utils/session'
             ]
           }
