@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { AdminCategory, AdminService } from '~/composables/useAdminTree'
+import type { AdminCategory, AdminService, CompanionApp } from '~/composables/useAdminTree'
 
 definePageMeta({ middleware: ['admin'], ssr: false })
 
@@ -10,8 +10,17 @@ const {
   deleteCategory,
   createService,
   updateService,
-  deleteService
+  deleteService,
+  createCompanionApp,
+  updateCompanionApp,
+  deleteCompanionApp
 } = useAdminTree()
+
+function platformIcon(platform: string | null) {
+  if (platform === 'android') return 'i-simple-icons-googleplay'
+  if (platform === 'ios') return 'i-simple-icons-appstore'
+  return 'i-lucide-smartphone'
+}
 
 const toast = useToast()
 
@@ -56,17 +65,39 @@ function onServiceSaved() {
   toast.add({ title: 'Service saved', color: 'success', icon: 'i-lucide-check' })
 }
 
+// --- Companion app modal ---
+const appModalOpen = ref(false)
+const editingApp = ref<CompanionApp | null>(null)
+const defaultServiceId = ref(0)
+
+function openCreateApp(serviceId: number) {
+  editingApp.value = null
+  defaultServiceId.value = serviceId
+  appModalOpen.value = true
+}
+
+function openEditApp(app: CompanionApp) {
+  editingApp.value = app
+  defaultServiceId.value = app.serviceId
+  appModalOpen.value = true
+}
+
+function onAppSaved() {
+  appModalOpen.value = false
+  toast.add({ title: 'App saved', color: 'success', icon: 'i-lucide-check' })
+}
+
 // --- Delete confirmation ---
-const deleteTarget = ref<{ type: 'category' | 'service'; id: number; name: string } | null>(null)
+const deleteTarget = ref<{ type: 'category' | 'service' | 'companion-app'; id: number; name: string } | null>(null)
 const deleteModalOpen = ref(false)
 
-function confirmDelete(type: 'category' | 'service', id: number, name: string) {
+function confirmDelete(type: 'category' | 'service' | 'companion-app', id: number, name: string) {
   deleteTarget.value = { type, id, name }
   deleteModalOpen.value = true
 }
 
 const isDeleting = computed(
-  () => deleteCategory.isPending.value || deleteService.isPending.value
+  () => deleteCategory.isPending.value || deleteService.isPending.value || deleteCompanionApp.isPending.value
 )
 
 async function executeDelete() {
@@ -74,8 +105,10 @@ async function executeDelete() {
   const { type, id } = deleteTarget.value
   if (type === 'category') {
     await deleteCategory.mutateAsync(id)
-  } else {
+  } else if (type === 'service') {
     await deleteService.mutateAsync(id)
+  } else {
+    await deleteCompanionApp.mutateAsync(id)
   }
   deleteModalOpen.value = false
   toast.add({ title: 'Deleted', color: 'neutral', icon: 'i-lucide-trash-2' })
@@ -133,44 +166,79 @@ async function executeDelete() {
 
         <!-- Services list -->
         <div class="flex flex-col divide-y divide-default">
-          <div
-            v-for="svc in cat.services"
-            :key="svc.id"
-            class="flex items-center gap-3 py-3 px-1"
-          >
-            <span class="font-medium flex-1">{{ svc.name }}</span>
-            <a
-              :href="svc.url"
-              target="_blank"
-              rel="noopener noreferrer"
-              class="text-sm text-muted truncate max-w-48 hover:underline"
-            >
-              {{ svc.url }}
-            </a>
-            <UBadge
-              v-if="svc.accessGroups.length"
-              :label="`${svc.accessGroups.length} group(s)`"
-              color="primary"
-              variant="subtle"
-              size="sm"
-            />
-            <UBadge :label="`order: ${svc.sortOrder}`" color="neutral" variant="subtle" size="sm" />
-            <UButton
-              icon="i-lucide-pencil"
-              size="sm"
-              color="neutral"
-              variant="ghost"
-              aria-label="Edit service"
-              @click="openEditService(svc)"
-            />
-            <UButton
-              icon="i-lucide-trash-2"
-              size="sm"
-              color="error"
-              variant="ghost"
-              aria-label="Delete service"
-              @click="confirmDelete('service', svc.id, svc.name)"
-            />
+          <div v-for="svc in cat.services" :key="svc.id">
+            <!-- Service row -->
+            <div class="flex items-center gap-3 py-3 px-1">
+              <span class="font-medium flex-1">{{ svc.name }}</span>
+              <a
+                :href="svc.url"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="text-sm text-muted truncate max-w-48 hover:underline"
+              >
+                {{ svc.url }}
+              </a>
+              <UBadge
+                v-if="svc.accessGroups.length"
+                :label="`${svc.accessGroups.length} group(s)`"
+                color="primary"
+                variant="subtle"
+                size="sm"
+              />
+              <UBadge :label="`order: ${svc.sortOrder}`" color="neutral" variant="subtle" size="sm" />
+              <UButton
+                icon="i-lucide-pencil"
+                size="sm"
+                color="neutral"
+                variant="ghost"
+                aria-label="Edit service"
+                @click="openEditService(svc)"
+              />
+              <UButton
+                icon="i-lucide-trash-2"
+                size="sm"
+                color="error"
+                variant="ghost"
+                aria-label="Delete service"
+                @click="confirmDelete('service', svc.id, svc.name)"
+              />
+            </div>
+
+            <!-- Companion apps sub-list -->
+            <div class="pl-8 pb-2 flex flex-col gap-0.5">
+              <div
+                v-for="app in svc.companionApps"
+                :key="app.id"
+                class="flex items-center gap-2 py-1 text-sm"
+              >
+                <UIcon :name="platformIcon(app.platform)" class="size-4 shrink-0 text-muted" />
+                <span class="flex-1">{{ app.name }}</span>
+                <UBadge v-if="app.platform" :label="app.platform" color="neutral" variant="subtle" size="xs" />
+                <UButton
+                  icon="i-lucide-pencil"
+                  size="xs"
+                  color="neutral"
+                  variant="ghost"
+                  aria-label="Edit app"
+                  @click="openEditApp(app)"
+                />
+                <UButton
+                  icon="i-lucide-trash-2"
+                  size="xs"
+                  color="error"
+                  variant="ghost"
+                  aria-label="Delete app"
+                  @click="confirmDelete('companion-app', app.id, app.name)"
+                />
+              </div>
+              <UButton
+                label="Add App"
+                icon="i-lucide-plus"
+                size="xs"
+                variant="ghost"
+                @click="openCreateApp(svc.id)"
+              />
+            </div>
           </div>
 
           <p v-if="!cat.services.length" class="py-3 px-1 text-sm text-muted">
@@ -212,6 +280,16 @@ async function executeDelete() {
       :create-mutation="createService"
       :update-mutation="updateService"
       @saved="onServiceSaved"
+    />
+
+    <!-- Companion app modal -->
+    <AdminCompanionAppModal
+      v-model:open="appModalOpen"
+      :app="editingApp"
+      :service-id="defaultServiceId"
+      :create-mutation="createCompanionApp"
+      :update-mutation="updateCompanionApp"
+      @saved="onAppSaved"
     />
 
     <!-- Delete confirmation modal -->

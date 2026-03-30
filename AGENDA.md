@@ -59,14 +59,14 @@ Geschützt — nur für Nutzer in der konfigurierten Admin-Gruppe.
 | Frontend-Framework | Nuxt 4 |
 | UI | Nuxt UI (v4) + Tailwind CSS 4 |
 | Auth | `nuxt-oidc-auth` + Keycloak |
-| Datenbank | SQLite via Bun native (`bun:sqlite`) + Drizzle ORM (`drizzle-orm/bun-sqlite`) |
+| Datenbank | SQLite via `better-sqlite3` + Drizzle ORM (`drizzle-orm/better-sqlite3`) |
 | Icons | Iconify (Lucide + Simple Icons) |
-| Package Manager + Runtime | Bun |
+| Package Manager | npm |
 
 ### Begründung der Tech-Entscheidungen
 
-- **Bun als Runtime + Package Manager**: Einheitlich, schnell, eingebautes SQLite
-- **`bun:sqlite` + Drizzle ORM direkt** (kein `db0`): `drizzle-orm/bun-sqlite` nutzt Buns natives SQLite direkt — kein zusätzlicher Layer, volle Typsicherheit
+- **npm + Node.js**: Standardmäßig, breite Kompatibilität
+- **`better-sqlite3` + Drizzle ORM** (kein `bun:sqlite`): Synchrones SQLite für Node.js, volle Typsicherheit via Drizzle
 - **`nuxt-oidc-auth`** statt `@sidebase/nuxt-auth`: Nativ OIDC-fokussiert, direkter Zugriff auf Keycloak JWT-Claims inkl. Gruppen-Claims; `@sidebase/nuxt-auth` (Auth.js) hat bekannte Probleme mit Keycloak-JWT-Extraktion
 
 ---
@@ -99,9 +99,8 @@ companion_apps
   id            INTEGER PRIMARY KEY
   service_id    INTEGER REFERENCES services(id)
   name          TEXT NOT NULL
-  platform      TEXT                 -- 'ios', 'android', 'web', ...
+  platform      TEXT                 -- 'ios', 'android'
   store_url     TEXT
-  icon          TEXT                 -- Iconify icon name
 ```
 
 **Begriffe:**
@@ -114,11 +113,7 @@ companion_apps
 
 ```
 /                           Start-Seite (Login erforderlich, gefilterte Dienst-Übersicht)
-/admin                      Admin-Dashboard (Admin-Gruppe erforderlich)
-/admin/categories           Kategorien verwalten
-/admin/services             Dienste verwalten
-/admin/services/new         Neuen Dienst anlegen
-/admin/services/[id]        Dienst bearbeiten
+/admin                      Admin-Bereich (Admin-Gruppe erforderlich) — Kategorien, Dienste und Companion-Apps verwalten
 ```
 
 ---

@@ -35,6 +35,13 @@ export interface AdminCategory {
   services: AdminService[]
 }
 
+export interface CompanionAppFormPayload {
+  serviceId: number
+  name: string
+  platform: string | null
+  storeUrl: string | null
+}
+
 export interface ServiceFormPayload {
   categoryId: number
   name: string
@@ -95,6 +102,24 @@ export function useAdminTree() {
     onSuccess: invalidate
   })
 
+  const createCompanionApp = useMutation({
+    mutationFn: (body: CompanionAppFormPayload) =>
+      $fetch('/api/admin/companion-apps', { method: 'POST', body }),
+    onSuccess: invalidate
+  })
+
+  const updateCompanionApp = useMutation({
+    mutationFn: ({ id, ...body }: { id: number } & Omit<CompanionAppFormPayload, 'serviceId'>) =>
+      $fetch(`/api/admin/companion-apps/${id}`, { method: 'PUT', body: { ...body, icon: null } }),
+    onSuccess: invalidate
+  })
+
+  const deleteCompanionApp = useMutation({
+    mutationFn: (id: number) =>
+      $fetch(`/api/admin/companion-apps/${id}`, { method: 'DELETE' }),
+    onSuccess: invalidate
+  })
+
   return {
     query,
     createCategory,
@@ -102,6 +127,9 @@ export function useAdminTree() {
     deleteCategory,
     createService,
     updateService,
-    deleteService
+    deleteService,
+    createCompanionApp,
+    updateCompanionApp,
+    deleteCompanionApp
   }
 }
