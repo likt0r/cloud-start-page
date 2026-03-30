@@ -51,7 +51,7 @@ const {
             <UCard
               v-for="service in category.services"
               :key="service.id"
-              class="flex flex-col gap-2"
+              class="flex flex-col gap-2 transition-opacity duration-200 hover:opacity-60"
               :ui="{ body: 'flex flex-col gap-2 h-full' }"
             >
               <div class="flex items-start justify-between gap-2">

@@ -7,7 +7,7 @@ export default defineAppConfig({
     },
     card: {
       slots: {
-        root: "backdrop-blur-md bg-black/70 ring-white/5"
+        root: "backdrop-blur-md bg-black/85 ring-white/5"
       }
     },
     header: {
