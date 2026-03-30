@@ -20,6 +20,8 @@ useSeoMeta({
   twitterImage: "https://ui.nuxt.com/assets/templates/nuxt/starter-light.png",
   twitterCard: "summary_large_image"
 });
+
+const { loggedIn, logout, login } = useOidcAuth();
 </script>
 
 <template>
@@ -35,6 +37,23 @@ useSeoMeta({
 
       <template #right>
         <UColorModeButton />
+
+        <UButton
+          v-if="loggedIn"
+          label="Logout"
+          color="neutral"
+          variant="ghost"
+          icon="i-lucide-log-out"
+          @click="logout()"
+        />
+        <UButton
+          v-else
+          label="Login"
+          color="neutral"
+          variant="ghost"
+          icon="i-lucide-log-in"
+          @click="login()"
+        />
 
         <UButton
           to="https://github.com/nuxt-ui-templates/starter"

@@ -15,7 +15,15 @@ export default defineNuxtConfig({
   css: ["~/assets/css/main.css"],
 
   routeRules: {
-    "/": { prerender: true }
+    "/": { ssr: true }
+  },
+
+  // nuxt-oidc-auth dist files import from "#imports" (a Nuxt virtual module).
+  // Without this, vite-node's SSR module runner cannot resolve "#imports" from
+  // the pre-built node_modules files and throws:
+  // "File URL path must not include encoded / characters"
+  build: {
+    transpile: ["nuxt-oidc-auth"]
   },
 
   oidc: {
@@ -39,46 +47,5 @@ export default defineNuxtConfig({
     }
   },
 
-  // nuxt-oidc-auth's ./runtime/* export has no `types` condition in its exports map.
-  // Add a path alias so both the app and server tsconfigs can resolve the import.
-  typescript: {
-    tsConfig: {
-      compilerOptions: {
-        paths: {
-          "nuxt-oidc-auth/runtime/server/utils/session.js": [
-            "../node_modules/nuxt-oidc-auth/dist/runtime/server/utils/session"
-          ]
-        }
-      }
-    }
-  },
-
-  nitro: {
-    externals: {
-      inline: [],
-      external: ["bun:sqlite"]
-    },
-    typescript: {
-      tsConfig: {
-        compilerOptions: {
-          paths: {
-            "nuxt-oidc-auth/runtime/server/utils/session.js": [
-              "../node_modules/nuxt-oidc-auth/dist/runtime/server/utils/session"
-            ]
-          }
-        }
-      }
-    }
-  },
-
-  compatibilityDate: "2025-01-15",
-
-  eslint: {
-    config: {
-      stylistic: {
-        commaDangle: "never",
-        braceStyle: "1tbs"
-      }
-    }
-  }
+  compatibilityDate: "2025-01-15"
 });

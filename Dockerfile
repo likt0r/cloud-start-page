@@ -1,20 +1,26 @@
 # Stage 1: Build
-FROM oven/bun:1-alpine AS builder
+FROM node:22-alpine AS builder
 WORKDIR /app
 
-COPY package.json bun.lock ./
-RUN bun install --frozen-lockfile
+# better-sqlite3 is a native addon — needs python3 + make + g++ to compile
+RUN apk add --no-cache python3 make g++
+
+COPY package.json package-lock.json ./
+RUN npm ci
 
 COPY . .
-RUN bun run build
+RUN npm run build
 
 # Stage 2: Production
-FROM oven/bun:1-alpine AS production
+FROM node:22-alpine AS production
 WORKDIR /app
 
-# Install production dependencies (drizzle-orm needed by migration runner at runtime)
-COPY package.json bun.lock ./
-RUN bun install --frozen-lockfile --production
+# better-sqlite3 native addon requires python3 + make + g++ at install time
+RUN apk add --no-cache python3 make g++
+
+# Install production dependencies only (includes better-sqlite3 + tsx for migrate)
+COPY package.json package-lock.json ./
+RUN npm ci --omit=dev && npm install tsx
 
 # Nuxt server output (standalone, no source needed)
 COPY --from=builder /app/.output ./.output

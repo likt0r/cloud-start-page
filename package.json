@@ -10,12 +10,13 @@
     "lint": "eslint .",
     "typecheck": "nuxt typecheck",
     "db:generate": "drizzle-kit generate",
-    "db:migrate": "bun server/db/migrate.ts"
+    "db:migrate": "tsx server/db/migrate.ts"
   },
   "dependencies": {
     "@iconify-json/lucide": "^1.2.98",
     "@iconify-json/simple-icons": "^1.2.74",
     "@nuxt/ui": "^4.5.1",
+    "better-sqlite3": "^12.8.0",
     "drizzle-orm": "^0.44.0",
     "nuxt": "^4.4.2",
     "nuxt-oidc-auth": "0.18.0",
@@ -23,11 +24,11 @@
   },
   "devDependencies": {
     "@nuxt/eslint": "^1.15.2",
-    "@types/bun": "latest",
+    "@types/better-sqlite3": "^7.6.13",
     "drizzle-kit": "^0.31.0",
     "eslint": "^10.0.3",
+    "tsx": "^4.21.0",
     "typescript": "^5.9.3",
     "vue-tsc": "^3.2.5"
-  },
-  "packageManager": "bun@1.2.0"
+  }
 }

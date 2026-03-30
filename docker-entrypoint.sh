@@ -2,7 +2,7 @@
 set -e
 
 echo "Running database migrations..."
-bun server/db/migrate.ts
+npx tsx server/db/migrate.ts
 
 echo "Starting server..."
-exec bun .output/server/index.mjs
+exec node .output/server/index.mjs

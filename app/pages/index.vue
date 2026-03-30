@@ -1,95 +1,56 @@
+<script setup lang="ts">
+const { loggedIn, login } = useOidcAuth();
+
+const { data: me, pending, error } = await useFetch('/api/me', {
+  immediate: loggedIn.value,
+  server: true,
+});
+</script>
+
 <template>
-  <div>
-    <UPageHero
-      title="Nuxt Starter Template"
-      description="A production-ready starter template powered by Nuxt UI. Build beautiful, accessible, and performant applications in minutes, not hours."
-      :links="[
-        {
-          label: 'Get started',
-          to: 'https://ui.nuxt.com/docs/getting-started/installation/nuxt',
-          target: '_blank',
-          trailingIcon: 'i-lucide-arrow-right',
-          size: 'xl'
-        },
-        {
-          label: 'Use this template',
-          to: 'https://github.com/nuxt-ui-templates/starter',
-          target: '_blank',
-          icon: 'i-simple-icons-github',
-          size: 'xl',
-          color: 'neutral',
-          variant: 'subtle'
-        }
-      ]"
-    />
+  <UContainer class="py-8">
+    <div v-if="!loggedIn" class="flex flex-col items-center gap-4 py-16">
+      <p class="text-muted">You are not logged in.</p>
+      <UButton label="Login with Keycloak" icon="i-lucide-log-in" size="lg" @click="login()" />
+    </div>
 
-    <UPageSection
-      id="features"
-      title="Everything you need to build modern Nuxt apps"
-      description="Start with a solid foundation. This template includes all the essentials for building production-ready applications with Nuxt UI's powerful component system."
-      :features="[
-        {
-          icon: 'i-lucide-rocket',
-          title: 'Production-ready from day one',
-          description:
-            'Pre-configured with TypeScript, ESLint, Tailwind CSS, and all the best practices. Focus on building features, not setting up tooling.'
-        },
-        {
-          icon: 'i-lucide-palette',
-          title: 'Beautiful by default',
-          description:
-            'Leveraging Nuxt UI\'s design system with automatic dark mode, consistent spacing, and polished components that look great out of the box.'
-        },
-        {
-          icon: 'i-lucide-zap',
-          title: 'Lightning fast',
-          description:
-            'Optimized for performance with SSR/SSG support, automatic code splitting, and edge-ready deployment. Your users will love the speed.'
-        },
-        {
-          icon: 'i-lucide-blocks',
-          title: '100+ components included',
-          description:
-            'Access Nuxt UI\'s comprehensive component library. From forms to navigation, everything is accessible, responsive, and customizable.'
-        },
-        {
-          icon: 'i-lucide-code-2',
-          title: 'Developer experience first',
-          description:
-            'Auto-imports, hot module replacement, and TypeScript support. Write less boilerplate and ship more features.'
-        },
-        {
-          icon: 'i-lucide-shield-check',
-          title: 'Built for scale',
-          description:
-            'Enterprise-ready architecture with proper error handling, SEO optimization, and security best practices built-in.'
-        }
-      ]"
-    />
+    <div v-else>
+      <h1 class="text-2xl font-semibold mb-6">Session Debug</h1>
 
-    <UPageSection>
-      <UPageCTA
-        title="Ready to build your next Nuxt app?"
-        description="Join thousands of developers building with Nuxt and Nuxt UI. Get this template and start shipping today."
-        variant="subtle"
-        :links="[
-          {
-            label: 'Start building',
-            to: 'https://ui.nuxt.com/docs/getting-started/installation/nuxt',
-            target: '_blank',
-            trailingIcon: 'i-lucide-arrow-right',
-            color: 'neutral'
-          },
-          {
-            label: 'View on GitHub',
-            to: 'https://github.com/nuxt-ui-templates/starter',
-            target: '_blank',
-            icon: 'i-simple-icons-github',
-            color: 'neutral',
-            variant: 'outline'
-          }
-        ]"
-      />
-    </UPageSection>
-  </div>
+      <div v-if="pending" class="text-muted">Loading…</div>
+      <div v-else-if="error" class="text-red-500">Failed to load session: {{ error.message }}</div>
+
+      <div v-else-if="me" class="flex flex-col gap-6">
+        <div>
+          <h2 class="text-sm font-medium text-muted uppercase tracking-wide mb-1">Username</h2>
+          <p class="font-mono">{{ me.userName ?? '(not set)' }}</p>
+        </div>
+
+        <div>
+          <h2 class="text-sm font-medium text-muted uppercase tracking-wide mb-1">
+            Groups ({{ me.groups.length }})
+          </h2>
+          <div v-if="me.groups.length" class="flex flex-wrap gap-2">
+            <UBadge v-for="group in me.groups" :key="group" :label="group" color="primary" variant="subtle" />
+          </div>
+          <p v-else class="text-muted text-sm">No groups</p>
+        </div>
+
+        <div>
+          <h2 class="text-sm font-medium text-muted uppercase tracking-wide mb-1">
+            Client Scopes ({{ me.scopes.length }})
+          </h2>
+          <div v-if="me.scopes.length" class="flex flex-wrap gap-2">
+            <UBadge v-for="scope in me.scopes" :key="scope" :label="scope" color="neutral" variant="subtle" />
+          </div>
+          <p v-else class="text-muted text-sm">No scope claim in token</p>
+        </div>
+
+        <div>
+          <h2 class="text-sm font-medium text-muted uppercase tracking-wide mb-1">Session Expires</h2>
+          <p class="font-mono text-sm">{{ new Date(me.expireAt * 1000).toLocaleString() }}</p>
+        </div>
+      </div>
+    </div>
+  </UContainer>
 </template>
