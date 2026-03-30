@@ -26,7 +26,7 @@ const { loggedIn, logout, login } = useOidcAuth();
 
 <template>
   <UApp>
-    <UHeader>
+    <UHeader v-if="loggedIn">
       <template #left>
         <NuxtLink to="/">
           <AppLogo class="w-auto h-6 shrink-0" />
