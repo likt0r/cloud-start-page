@@ -31,11 +31,11 @@
   --color-accent-950: #022F3F;
 }
 
-/* Force pure black background in dark mode */
+/* Dark mode design tokens */
 .dark {
-  --ui-bg: #000000;
-  --ui-bg-elevated: #0d0d0d;
-  --ui-bg-accented: #1a1a1a;
+  --ui-bg: transparent;
+  --ui-bg-elevated: rgb(10 10 10 / 0.1);
+  --ui-bg-accented: rgb(20 20 20 / 0.1);
 }
 
 html,
