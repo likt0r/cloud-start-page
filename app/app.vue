@@ -26,6 +26,7 @@ const { loggedIn, logout, login } = useOidcAuth();
 
 <template>
   <UApp>
+    <MatrixRain />
     <UHeader v-if="loggedIn">
       <template #left>
         <NuxtLink to="/">
