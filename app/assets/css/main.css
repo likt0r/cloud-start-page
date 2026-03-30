@@ -4,15 +4,41 @@
 @theme static {
   --font-sans: 'Public Sans', sans-serif;
 
-  --color-green-50: #EFFDF5;
-  --color-green-100: #D9FBE8;
-  --color-green-200: #B3F5D1;
-  --color-green-300: #75EDAE;
-  --color-green-400: #00DC82;
-  --color-green-500: #00C16A;
-  --color-green-600: #00A155;
-  --color-green-700: #007F45;
-  --color-green-800: #016538;
-  --color-green-900: #0A5331;
-  --color-green-950: #052E16;
+  /* Primary: #FF5E1F (orange) */
+  --color-brand-50: #FFF4EE;
+  --color-brand-100: #FFE4D0;
+  --color-brand-200: #FFC7A0;
+  --color-brand-300: #FFA070;
+  --color-brand-400: #FF7B43;
+  --color-brand-500: #FF5E1F;
+  --color-brand-600: #E84A07;
+  --color-brand-700: #BA3C06;
+  --color-brand-800: #8C2D05;
+  --color-brand-900: #6C2104;
+  --color-brand-950: #420F02;
+
+  /* Secondary: #1FC0FF (cyan) */
+  --color-accent-50: #EEF9FF;
+  --color-accent-100: #D5F2FF;
+  --color-accent-200: #AAEAFF;
+  --color-accent-300: #6FDAFF;
+  --color-accent-400: #43CCFF;
+  --color-accent-500: #1FC0FF;
+  --color-accent-600: #07ACEB;
+  --color-accent-700: #0689BE;
+  --color-accent-800: #046A93;
+  --color-accent-900: #045470;
+  --color-accent-950: #022F3F;
+}
+
+/* Force pure black background in dark mode */
+.dark {
+  --ui-bg: #000000;
+  --ui-bg-elevated: #0d0d0d;
+  --ui-bg-accented: #1a1a1a;
+}
+
+html,
+body {
+  background-color: #000000;
 }

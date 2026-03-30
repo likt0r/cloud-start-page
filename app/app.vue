@@ -35,7 +35,6 @@ const { loggedIn, logout, login } = useOidcAuth();
 
       <template #right>
         <AdminSettings />
-        <UColorModeButton />
 
         <UButton
           v-if="loggedIn"
