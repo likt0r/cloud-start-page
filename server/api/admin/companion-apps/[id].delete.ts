@@ -1,16 +1,13 @@
-import { eq } from 'drizzle-orm'
-import { db } from '../../../db/index'
-import { companionApps } from '../../../db/schema'
+import { eq } from "drizzle-orm";
+import { db } from "../../../db/index";
+import { companionApps } from "../../../db/schema";
 
 export default defineEventHandler(async (event) => {
-  const id = Number(getRouterParam(event, 'id'))
-  if (isNaN(id)) throw createError({ statusCode: 400, message: 'Invalid id' })
+  const id = Number(getRouterParam(event, "id"));
+  if (isNaN(id)) throw createError({ statusCode: 400, message: "Invalid id" });
 
-  const [deleted] = await db
-    .delete(companionApps)
-    .where(eq(companionApps.id, id))
-    .returning()
+  const [deleted] = await db.delete(companionApps).where(eq(companionApps.id, id)).returning();
 
-  if (!deleted) throw createError({ statusCode: 404, message: 'Not found' })
-  setResponseStatus(event, 204)
-})
+  if (!deleted) throw createError({ statusCode: 404, message: "Not found" });
+  setResponseStatus(event, 204);
+});
