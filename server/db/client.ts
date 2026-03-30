@@ -1,6 +1,6 @@
 import Database from 'better-sqlite3'
 
-export const DB_PATH = process.env.DATABASE_PATH ?? '.data/db.sqlite'
+export const DB_PATH = process.env.DATABASE_PATH?.trim() || '.data/db.sqlite'
 
 export function createDatabase(path: string): Database.Database {
   const sqlite = new Database(path)

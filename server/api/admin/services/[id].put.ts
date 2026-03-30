@@ -8,7 +8,7 @@ export default defineEventHandler(async (event) => {
 
   const { categoryId, name, url, description, imagePath, sortOrder, accessGroups } = await readBody(event);
 
-  return db.transaction((tx) => {
+  await db.transaction((tx) => {
     const patch = Object.fromEntries(
       Object.entries({ categoryId, name, url, description, imagePath, sortOrder }).filter(
         ([, v]) => v !== undefined
@@ -28,13 +28,13 @@ export default defineEventHandler(async (event) => {
           .run();
       }
     }
-
-    const updated = tx.query.services.findFirst({
-      where: (s, { eq: e }) => e(s.id, id),
-      with: { accessGroups: true, companionApps: true }
-    });
-
-    if (!updated) throw createError({ statusCode: 404, message: "Not found" });
-    return updated;
   });
+
+  const updated = await db.query.services.findFirst({
+    where: (s, { eq: e }) => e(s.id, id),
+    with: { accessGroups: true, companionApps: true }
+  });
+
+  if (!updated) throw createError({ statusCode: 404, message: "Not found" });
+  return updated;
 });

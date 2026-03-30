@@ -11,10 +11,14 @@ export default defineEventHandler(async (event) => {
   const scopeString = session.claims?.scope as string | undefined
   const scopes = scopeString ? scopeString.split(' ').filter(Boolean) : []
 
+  const adminGroup = process.env.ADMIN_GROUP
+  const isAdmin = !!adminGroup && groups.includes(adminGroup)
+
   return {
     userName: session.userName ?? (session.userInfo?.preferred_username as string | undefined),
     groups,
     scopes,
     expireAt: session.expireAt,
+    isAdmin,
   }
 })

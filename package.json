@@ -16,6 +16,7 @@
     "@iconify-json/lucide": "^1.2.98",
     "@iconify-json/simple-icons": "^1.2.74",
     "@nuxt/ui": "^4.5.1",
+    "@tanstack/vue-query": "^5.95.2",
     "better-sqlite3": "^12.8.0",
     "drizzle-orm": "^0.44.0",
     "nuxt": "^4.4.2",

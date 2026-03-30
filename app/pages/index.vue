@@ -15,7 +15,17 @@ const { data: me, pending, error } = await useFetch('/api/me', {
     </div>
 
     <div v-else>
-      <h1 class="text-2xl font-semibold mb-6">Session Debug</h1>
+      <div class="flex items-center justify-between mb-6">
+        <h1 class="text-2xl font-semibold">Session Debug</h1>
+        <UButton
+          v-if="me?.isAdmin"
+          label="Admin"
+          icon="i-lucide-settings"
+          color="neutral"
+          variant="ghost"
+          to="/admin"
+        />
+      </div>
 
       <div v-if="pending" class="text-muted">Loading…</div>
       <div v-else-if="error" class="text-red-500">Failed to load session: {{ error.message }}</div>

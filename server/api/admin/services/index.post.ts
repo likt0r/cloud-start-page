@@ -18,30 +18,32 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 400, message: "categoryId, name and url are required" });
   }
 
-  return db.transaction((tx) => {
-    const created = tx
+  const created = db.transaction((tx) => {
+    const row = tx
       .insert(services)
       .values({ categoryId, name, url, description, imagePath, sortOrder: sortOrder ?? 0 })
       .returning()
       .all()[0];
 
-    if (!created) throw createError({ statusCode: 500, message: "Failed to create service" });
+    if (!row) throw createError({ statusCode: 500, message: "Failed to create service" });
 
     if (accessGroups?.length) {
       tx.insert(serviceAccessGroups)
-        .values(accessGroups.map((g: string) => ({ serviceId: created.id, keycloakGroup: g })))
+        .values(accessGroups.map((g: string) => ({ serviceId: row.id, keycloakGroup: g })))
         .run();
     }
 
     if (apps?.length) {
       tx.insert(companionApps)
-        .values(apps.map((a: typeof companionApps.$inferInsert) => ({ ...a, serviceId: created.id })))
+        .values(apps.map((a: typeof companionApps.$inferInsert) => ({ ...a, serviceId: row.id })))
         .run();
     }
 
-    return tx.query.services.findFirst({
-      where: (s, { eq }) => eq(s.id, created.id),
-      with: { accessGroups: true, companionApps: true }
-    });
+    return row;
+  });
+
+  return await db.query.services.findFirst({
+    where: (s, { eq }) => eq(s.id, created.id),
+    with: { accessGroups: true, companionApps: true }
   });
 });
