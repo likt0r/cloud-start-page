@@ -10,6 +10,11 @@ export default defineAppConfig({
         root: "backdrop-blur-md bg-black/85 ring-white/5"
       }
     },
+    modal: {
+      slots: {
+        content: "backdrop-blur-md bg-black/85 ring-white/5"
+      }
+    },
     header: {
       slots: {
         root: "border-b border-white/5"
