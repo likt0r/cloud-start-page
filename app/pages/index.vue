@@ -1,6 +1,8 @@
 <script setup lang="ts">
 const { loggedIn, login } = useOidcAuth();
 
+const { data: settings } = await useFetch('/api/settings', { key: 'site-settings', server: true })
+
 const {
   data: categories,
   pending,
@@ -9,6 +11,8 @@ const {
   immediate: loggedIn.value,
   server: true
 });
+
+const loginButtonText = computed(() => settings.value?.loginButtonText || 'Login')
 </script>
 
 <template>
@@ -17,7 +21,7 @@ const {
       <img src="/mean-robot.svg" alt="Cloud Start Page" class="h-64 w-auto" />
       <div class="text-center"></div>
       <AppButton
-        label="Login into Apollon Realm"
+        :label="loginButtonText"
         color="primary"
         variant="outline"
         icon="i-lucide-log-in"

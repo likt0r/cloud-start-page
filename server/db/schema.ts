@@ -37,6 +37,14 @@ export const groups = sqliteTable('groups', {
   name: text('name').notNull().unique()
 })
 
+export const siteSettings = sqliteTable('site_settings', {
+  id: integer('id').primaryKey().default(1),
+  loginButtonText: text('login_button_text').notNull().default('Login'),
+  pageTitle: text('page_title').notNull().default('Cloud Start Page'),
+  logoPath: text('logo_path').notNull().default(''),
+  logoSmallPath: text('logo_small_path').notNull().default('')
+})
+
 export const companionApps = sqliteTable('companion_apps', {
   id: integer('id').primaryKey({ autoIncrement: true }),
   serviceId: integer('service_id')
