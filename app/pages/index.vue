@@ -9,7 +9,6 @@ const {
   immediate: loggedIn.value,
   server: true
 });
-
 </script>
 
 <template>
@@ -17,9 +16,10 @@ const {
     <div v-if="!loggedIn" class="flex flex-col items-center gap-6 py-24">
       <img src="/mean-robot.svg" alt="Cloud Start Page" class="h-64 w-auto" />
       <div class="text-center"></div>
-      <UButton
+      <AppButton
         label="Login into Apollon Realm"
         color="primary"
+        variant="outline"
         icon="i-lucide-log-in"
         size="lg"
         @click="login()"
@@ -45,11 +45,7 @@ const {
           </div>
 
           <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-            <ServiceCard
-              v-for="service in category.services"
-              :key="service.id"
-              :service="service"
-            />
+            <ServiceCard v-for="service in category.services" :key="service.id" :service="service" />
           </div>
         </section>
       </div>

@@ -91,13 +91,13 @@ async function onSubmit() {
         </UFormField>
 
         <div class="flex justify-end gap-2 pt-2">
-          <UButton
+          <AppButton
             label="Cancel"
             color="neutral"
             variant="ghost"
             @click="$emit('update:open', false)"
           />
-          <UButton
+          <AppButton
             type="submit"
             :label="app ? 'Save' : 'Create'"
             :loading="isPending"

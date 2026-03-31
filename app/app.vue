@@ -37,7 +37,7 @@ const { loggedIn, logout, login } = useOidcAuth();
       <template #right>
         <AdminSettings />
 
-        <UButton
+        <AppButton
           v-if="loggedIn"
           label="Logout"
           color="neutral"
@@ -45,7 +45,7 @@ const { loggedIn, logout, login } = useOidcAuth();
           icon="i-lucide-log-out"
           @click="logout()"
         />
-        <UButton
+        <AppButton
           v-else
           label="Login"
           color="neutral"

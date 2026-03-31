@@ -12,7 +12,7 @@ const {
 </script>
 
 <template>
-  <UButton
+  <AppButton
     v-if="loggedIn && me?.isAdmin"
     icon="i-lucide-settings"
     color="neutral"

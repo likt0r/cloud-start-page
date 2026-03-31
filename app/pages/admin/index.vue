@@ -5,22 +5,10 @@ definePageMeta({ middleware: ['admin'], ssr: false })
 
 const {
   query,
-  createCategory,
-  updateCategory,
-  deleteCategory,
-  createService,
-  updateService,
-  deleteService,
-  createCompanionApp,
-  updateCompanionApp,
-  deleteCompanionApp
+  createCategory, updateCategory, deleteCategory,
+  createService, updateService, deleteService,
+  createCompanionApp, updateCompanionApp, deleteCompanionApp
 } = useAdminTree()
-
-function platformIcon(platform: string | null) {
-  if (platform === 'android') return 'i-simple-icons-googleplay'
-  if (platform === 'ios') return 'i-simple-icons-appstore'
-  return 'i-lucide-smartphone'
-}
 
 const toast = useToast()
 
@@ -103,13 +91,9 @@ const isDeleting = computed(
 async function executeDelete() {
   if (!deleteTarget.value) return
   const { type, id } = deleteTarget.value
-  if (type === 'category') {
-    await deleteCategory.mutateAsync(id)
-  } else if (type === 'service') {
-    await deleteService.mutateAsync(id)
-  } else {
-    await deleteCompanionApp.mutateAsync(id)
-  }
+  if (type === 'category') await deleteCategory.mutateAsync(id)
+  else if (type === 'service') await deleteService.mutateAsync(id)
+  else await deleteCompanionApp.mutateAsync(id)
   deleteModalOpen.value = false
   toast.add({ title: 'Deleted', color: 'neutral', icon: 'i-lucide-trash-2' })
 }
@@ -117,18 +101,15 @@ async function executeDelete() {
 
 <template>
   <UContainer class="py-8">
-    <!-- Header -->
     <div class="flex items-center justify-between mb-6">
       <h1 class="text-2xl font-semibold">Admin — Services</h1>
-      <UButton label="New Category" icon="i-lucide-plus" @click="openCreateCategory()" />
+      <AppButton label="New Category" icon="i-lucide-plus" variant="outline" @click="openCreateCategory()" />
     </div>
 
-    <!-- Loading -->
     <div v-if="query.isPending.value" class="flex flex-col gap-4">
       <USkeleton v-for="n in 3" :key="n" class="h-16 rounded-lg" />
     </div>
 
-    <!-- Error -->
     <UAlert
       v-else-if="query.isError.value"
       color="error"
@@ -137,138 +118,23 @@ async function executeDelete() {
       icon="i-lucide-circle-alert"
     />
 
-    <!-- Tree -->
     <div v-else class="flex flex-col gap-4">
-      <UCard v-for="cat in query.data.value" :key="cat.id">
-        <template #header>
-          <div class="flex items-center gap-3">
-            <UIcon :name="cat.icon" class="size-5 text-primary shrink-0" />
-            <span class="font-semibold text-lg flex-1">{{ cat.title }}</span>
-            <UBadge :label="`order: ${cat.sortOrder}`" color="neutral" variant="subtle" size="sm" />
-            <UButton
-              icon="i-lucide-pencil"
-              size="sm"
-              color="neutral"
-              variant="ghost"
-              aria-label="Edit category"
-              @click="openEditCategory(cat)"
-            />
-            <UButton
-              icon="i-lucide-trash-2"
-              size="sm"
-              color="error"
-              variant="ghost"
-              aria-label="Delete category"
-              @click="confirmDelete('category', cat.id, cat.title)"
-            />
-          </div>
-        </template>
-
-        <!-- Services list -->
-        <div class="flex flex-col divide-y divide-default">
-          <div v-for="svc in cat.services" :key="svc.id">
-            <!-- Service row -->
-            <div class="flex items-center gap-3 py-3 px-1">
-              <img
-                v-if="svc.imagePath"
-                :src="svc.imagePath"
-                :alt="svc.name"
-                class="h-6 w-6 rounded object-contain shrink-0"
-              />
-              <span class="font-medium flex-1">{{ svc.name }}</span>
-              <a
-                :href="svc.url"
-                target="_blank"
-                rel="noopener noreferrer"
-                class="text-sm text-muted truncate max-w-48 hover:underline"
-              >
-                {{ svc.url }}
-              </a>
-              <UBadge
-                v-if="svc.accessGroups.length"
-                :label="`${svc.accessGroups.length} group(s)`"
-                color="primary"
-                variant="subtle"
-                size="sm"
-              />
-              <UBadge :label="`order: ${svc.sortOrder}`" color="neutral" variant="subtle" size="sm" />
-              <UButton
-                icon="i-lucide-pencil"
-                size="sm"
-                color="neutral"
-                variant="ghost"
-                aria-label="Edit service"
-                @click="openEditService(svc)"
-              />
-              <UButton
-                icon="i-lucide-trash-2"
-                size="sm"
-                color="error"
-                variant="ghost"
-                aria-label="Delete service"
-                @click="confirmDelete('service', svc.id, svc.name)"
-              />
-            </div>
-
-            <!-- Companion apps sub-list -->
-            <div class="pl-8 pb-2 flex flex-col gap-0.5">
-              <div
-                v-for="app in svc.companionApps"
-                :key="app.id"
-                class="flex items-center gap-2 py-1 text-sm"
-              >
-                <UIcon :name="platformIcon(app.platform)" class="size-4 shrink-0 text-muted" />
-                <span class="flex-1">{{ app.name }}</span>
-                <UBadge v-if="app.platform" :label="app.platform" color="neutral" variant="subtle" size="xs" />
-                <UButton
-                  icon="i-lucide-pencil"
-                  size="xs"
-                  color="neutral"
-                  variant="ghost"
-                  aria-label="Edit app"
-                  @click="openEditApp(app)"
-                />
-                <UButton
-                  icon="i-lucide-trash-2"
-                  size="xs"
-                  color="error"
-                  variant="ghost"
-                  aria-label="Delete app"
-                  @click="confirmDelete('companion-app', app.id, app.name)"
-                />
-              </div>
-              <UButton
-                label="Add App"
-                icon="i-lucide-plus"
-                size="xs"
-                variant="ghost"
-                @click="openCreateApp(svc.id)"
-              />
-            </div>
-          </div>
-
-          <p v-if="!cat.services.length" class="py-3 px-1 text-sm text-muted">
-            No services yet.
-          </p>
-        </div>
-
-        <template #footer>
-          <UButton
-            label="Add Service"
-            icon="i-lucide-plus"
-            size="sm"
-            variant="ghost"
-            @click="openCreateService(cat.id)"
-          />
-        </template>
-      </UCard>
-
+      <AdminCategoryCard
+        v-for="cat in query.data.value"
+        :key="cat.id"
+        :cat="cat"
+        @edit="openEditCategory"
+        @delete="confirmDelete"
+        @add-service="openCreateService"
+        @edit-service="openEditService"
+        @edit-app="openEditApp"
+        @add-app="openCreateApp"
+      />
       <div v-if="!query.data.value?.length" class="text-center text-muted py-16">
         No categories yet. Create one to get started.
       </div>
     </div>
 
-    <!-- Category modal -->
     <AdminCategoryModal
       v-model:open="catModalOpen"
       :category="editingCategory"
@@ -277,7 +143,6 @@ async function executeDelete() {
       @saved="onCategorySaved"
     />
 
-    <!-- Service modal -->
     <AdminServiceModal
       v-model:open="svcModalOpen"
       :service="editingService"
@@ -288,7 +153,6 @@ async function executeDelete() {
       @saved="onServiceSaved"
     />
 
-    <!-- Companion app modal -->
     <AdminCompanionAppModal
       v-model:open="appModalOpen"
       :app="editingApp"
@@ -298,34 +162,11 @@ async function executeDelete() {
       @saved="onAppSaved"
     />
 
-    <!-- Delete confirmation modal -->
-    <UModal v-model:open="deleteModalOpen" title="Confirm Delete">
-      <template #body>
-        <p class="text-sm">
-          Delete <strong>{{ deleteTarget?.name }}</strong>?
-          <template v-if="deleteTarget?.type === 'category'">
-            <br />
-            <span class="text-muted">This will also delete all services in this category.</span>
-          </template>
-          This cannot be undone.
-        </p>
-      </template>
-      <template #footer>
-        <div class="flex justify-end gap-2">
-          <UButton
-            label="Cancel"
-            color="neutral"
-            variant="ghost"
-            @click="deleteModalOpen = false"
-          />
-          <UButton
-            label="Delete"
-            color="error"
-            :loading="isDeleting"
-            @click="executeDelete()"
-          />
-        </div>
-      </template>
-    </UModal>
+    <AdminDeleteModal
+      v-model:open="deleteModalOpen"
+      :target="deleteTarget"
+      :is-deleting="isDeleting"
+      @confirm="executeDelete"
+    />
   </UContainer>
 </template>

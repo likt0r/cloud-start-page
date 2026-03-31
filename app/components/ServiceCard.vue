@@ -46,7 +46,7 @@ function platformIcon(platform: string | null) {
       v-if="service.companionApps?.length"
       class="flex items-center justify-end gap-1 mt-auto pt-2"
     >
-      <UButton
+      <AppButton
         v-for="app in service.companionApps"
         :key="app.id"
         :to="app.storeUrl ?? undefined"

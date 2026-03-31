@@ -15,13 +15,13 @@ const {
   <UContainer class="py-8">
     <div v-if="!loggedIn" class="flex flex-col items-center gap-4 py-16">
       <p class="text-muted">You are not logged in.</p>
-      <UButton label="Login with Keycloak" icon="i-lucide-log-in" size="lg" @click="login()" />
+      <AppButton label="Login with Keycloak" icon="i-lucide-log-in" size="lg" @click="login()" />
     </div>
 
     <div v-else>
       <div class="flex items-center justify-between mb-6">
         <h1 class="text-2xl font-semibold">Session Debug</h1>
-        <UButton
+        <AppButton
           v-if="me?.isAdmin"
           label="Admin"
           icon="i-lucide-settings"

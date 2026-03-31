@@ -31,8 +31,8 @@ const imageUploading = ref(false)
 const imageError = ref('')
 
 watch(
-  () => props.open,
-  (open) => {
+  () => [props.open, props.service] as const,
+  ([open]) => {
     if (open) {
       form.categoryId = props.service?.categoryId ?? props.defaultCategoryId ?? props.categories[0]?.id ?? 0
       form.name = props.service?.name ?? ''
@@ -140,7 +140,7 @@ async function onSubmit() {
               :disabled="imageUploading"
               :label="imageUploading ? 'Uploading…' : (form.imagePath ? 'Replace image' : 'Choose image')"
             />
-            <UButton
+            <AppButton
               v-if="form.imagePath"
               icon="i-lucide-x"
               color="neutral"
@@ -162,13 +162,13 @@ async function onSubmit() {
         </UFormField>
 
         <div class="flex justify-end gap-2 pt-2">
-          <UButton
+          <AppButton
             label="Cancel"
             color="neutral"
             variant="ghost"
             @click="$emit('update:open', false)"
           />
-          <UButton
+          <AppButton
             type="submit"
             :label="service ? 'Save' : 'Create'"
             :loading="isPending"

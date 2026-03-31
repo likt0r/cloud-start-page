@@ -43,7 +43,7 @@
     :ui="{ content: 'min-w-fit' }"
     size="xs"
   >
-    <UButton
+    <AppButton
       label="Starter"
       variant="subtle"
       trailing-icon="i-lucide-chevron-down"
@@ -57,4 +57,5 @@
       }"
     />
   </UDropdownMenu>
+
 </template>
