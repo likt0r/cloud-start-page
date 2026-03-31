@@ -10,7 +10,8 @@
     "lint": "eslint .",
     "typecheck": "nuxt typecheck",
     "db:generate": "drizzle-kit generate",
-    "db:migrate": "tsx server/db/migrate.ts"
+    "db:migrate": "tsx server/db/migrate.ts",
+    "release": "release-it"
   },
   "dependencies": {
     "@iconify-json/lucide": "^1.2.98",
@@ -28,6 +29,7 @@
     "@types/better-sqlite3": "^7.6.13",
     "drizzle-kit": "^0.31.0",
     "eslint": "^10.0.3",
+    "release-it": "^19.2.4",
     "tsx": "^4.21.0",
     "typescript": "^5.9.3",
     "vue-tsc": "^3.2.5"
