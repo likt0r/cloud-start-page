@@ -20,41 +20,12 @@ useSeoMeta({
   twitterImage: "https://ui.nuxt.com/assets/templates/nuxt/starter-light.png",
   twitterCard: "summary_large_image"
 });
-
-const { loggedIn, logout, login } = useOidcAuth();
 </script>
 
 <template>
   <UApp>
     <MatrixRain />
-    <UHeader v-if="loggedIn">
-      <template #left>
-        <NuxtLink to="/">
-          <AppLogo class="w-auto h-6 shrink-0" />
-        </NuxtLink>
-      </template>
-
-      <template #right>
-        <AdminSettings />
-
-        <AppButton
-          v-if="loggedIn"
-          label="Logout"
-          color="neutral"
-          variant="ghost"
-          icon="i-lucide-log-out"
-          @click="logout()"
-        />
-        <AppButton
-          v-else
-          label="Login"
-          color="neutral"
-          variant="ghost"
-          icon="i-lucide-log-in"
-          @click="login()"
-        />
-      </template>
-    </UHeader>
+    <AppHeader />
 
     <UMain>
       <NuxtPage />
