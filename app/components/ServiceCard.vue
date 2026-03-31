@@ -23,7 +23,7 @@ function platformIcon(platform: string | null) {
 
 <template>
   <UCard
-    class="flex flex-col gap-2 transition-all duration-200 hover:brightness-125 hover:scale-[1.02]"
+    class="flex flex-col gap-2 transition-all duration-200 hover:brightness-135"
     :ui="{ body: 'flex flex-col gap-2 h-full' }"
   >
     <a
@@ -39,7 +39,7 @@ function platformIcon(platform: string | null) {
         class="h-6 w-6 object-contain rounded shrink-0"
       />
       <span class="font-medium leading-tight flex-1 group-hover:text-primary">{{ service.name }}</span>
-      <UIcon name="i-lucide-external-link" class="size-3.5 shrink-0 text-primary" />
+      <UIcon name="i-lucide-external-link" class="shrink-0 text-primary" />
     </a>
 
     <p v-if="service.description" class="text-sm text-muted leading-snug">
