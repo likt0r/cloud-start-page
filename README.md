@@ -1,60 +1,67 @@
-# Nuxt Starter Template
+# Cloud Start Page
 
-[![Nuxt UI](https://img.shields.io/badge/Made%20with-Nuxt%20UI-00DC82?logo=nuxt&labelColor=020420)](https://ui.nuxt.com)
+A private start page for self-hosted cloud services. Provides a clean dashboard to access all your services, with access control via Keycloak groups.
 
-Use this template to get started with [Nuxt UI](https://ui.nuxt.com) quickly.
+## Features
 
-- [Live demo](https://starter-template.nuxt.dev/)
-- [Documentation](https://ui.nuxt.com/docs/getting-started/installation/nuxt)
+- Services organized in visual categories (icon + title)
+- Access control: users only see services their Keycloak groups have access to
+- Companion app links per service (mobile, desktop)
+- Admin area: manage services, categories, icons, and access groups
 
-<a href="https://starter-template.nuxt.dev/" target="_blank">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://ui.nuxt.com/assets/templates/nuxt/starter-dark.png">
-    <source media="(prefers-color-scheme: light)" srcset="https://ui.nuxt.com/assets/templates/nuxt/starter-light.png">
-    <img alt="Nuxt Starter Template" src="https://ui.nuxt.com/assets/templates/nuxt/starter-light.png" width="830" height="466">
-  </picture>
-</a>
+## Tech Stack
 
-> The starter template for Vue is on https://github.com/nuxt-ui-templates/starter-vue.
-
-## Quick Start
-
-```bash [Terminal]
-npm create nuxt@latest -- -t ui
-```
-
-## Deploy your own
-
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-name=starter&repository-url=https%3A%2F%2Fgithub.com%2Fnuxt-ui-templates%2Fstarter&demo-image=https%3A%2F%2Fui.nuxt.com%2Fassets%2Ftemplates%2Fnuxt%2Fstarter-dark.png&demo-url=https%3A%2F%2Fstarter-template.nuxt.dev%2F&demo-title=Nuxt%20Starter%20Template&demo-description=A%20minimal%20template%20to%20get%20started%20with%20Nuxt%20UI.)
+- **Framework:** Nuxt 4 + Nuxt UI v4 + Tailwind CSS 4
+- **Auth:** `nuxt-oidc-auth` + Keycloak (OIDC with group claims from JWT)
+- **Database:** `better-sqlite3` + Drizzle ORM
 
 ## Setup
 
-Make sure to install the dependencies:
+Install dependencies:
 
 ```bash
-pnpm install
+npm install
 ```
 
-## Development Server
+## Development
 
 Start the development server on `http://localhost:3000`:
 
 ```bash
-pnpm dev
+npm run dev
+```
+
+## Database
+
+Generate migrations:
+
+```bash
+npm run db:generate
+```
+
+Run migrations:
+
+```bash
+npm run db:migrate
 ```
 
 ## Production
 
-Build the application for production:
+Build the application:
 
 ```bash
-pnpm build
+npm run build
 ```
 
-Locally preview production build:
+Preview the production build:
 
 ```bash
-pnpm preview
+npm run preview
 ```
 
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+## Environment Variables
+
+| Variable | Description |
+|---|---|
+| `NUXT_OIDC_*` | Keycloak OIDC configuration |
+| `ADMIN_GROUP` | Keycloak group name with admin access |
