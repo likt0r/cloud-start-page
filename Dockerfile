@@ -27,6 +27,7 @@ COPY --from=builder /app/.output ./.output
 
 # Migration runner and migration files
 COPY --from=builder /app/server/db/migrate.ts ./server/db/migrate.ts
+COPY --from=builder /app/server/db/client.ts ./server/db/client.ts
 COPY --from=builder /app/server/db/migrations ./server/db/migrations
 
 COPY docker-entrypoint.sh ./
