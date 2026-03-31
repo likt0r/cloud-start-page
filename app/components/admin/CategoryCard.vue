@@ -40,7 +40,7 @@ const emit = defineEmits<{
     </template>
 
     <div class="flex flex-col divide-y divide-default">
-      <AdminServiceRow
+      <AdminCategoryRow
         v-for="svc in cat.services"
         :key="svc.id"
         :service="svc"
