@@ -46,7 +46,7 @@
     <AppButton
       label="Starter"
       variant="subtle"
-      trailing-icon="i-lucide-chevron-down"
+      trailingIcon="i-lucide-chevron-down"
       size="xs"
       class="-mb-[6px] font-semibold rounded-full truncate"
       :class="[open && 'bg-primary/15']"
@@ -57,5 +57,4 @@
       }"
     />
   </UDropdownMenu>
-
 </template>

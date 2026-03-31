@@ -46,8 +46,8 @@ async function uploadLogo(
     fd.append("file", file);
     const { path } = await $fetch<{ path: string }>("/api/admin/upload", { method: "POST", body: fd });
     form[field] = path;
-  } catch (e: any) {
-    errorRef.value = e?.data?.message ?? "Upload failed";
+  } catch (e: unknown) {
+    errorRef.value = (e as { data?: { message?: string } })?.data?.message ?? "Upload failed";
   } finally {
     uploadingRef.value = false;
   }
@@ -112,7 +112,12 @@ const isUploading = computed(() => logoUploading.value || logoSmallUploading.val
               type="file"
               accept="image/*"
               class="hidden"
-              @change="(e) => { const f = (e.target as HTMLInputElement).files?.[0]; if (f) logoFile = f }"
+              @change="
+                (e) => {
+                  const f = (e.target as HTMLInputElement).files?.[0];
+                  if (f) logoFile = f;
+                }
+              "
             />
           </div>
           <p v-if="logoError" class="text-[var(--ui-color-error-500)] text-xs mt-1">{{ logoError }}</p>
@@ -139,7 +144,12 @@ const isUploading = computed(() => logoUploading.value || logoSmallUploading.val
               type="file"
               accept="image/*"
               class="hidden"
-              @change="(e) => { const f = (e.target as HTMLInputElement).files?.[0]; if (f) logoSmallFile = f }"
+              @change="
+                (e) => {
+                  const f = (e.target as HTMLInputElement).files?.[0];
+                  if (f) logoSmallFile = f;
+                }
+              "
             />
           </div>
           <p v-if="logoSmallError" class="text-[var(--ui-color-error-500)] text-xs mt-1">

@@ -1,12 +1,11 @@
 <script setup lang="ts">
-const { loggedIn, logout, login } = useOidcAuth();
+const { loggedIn, logout } = useOidcAuth();
 
 const { data: settings } = await useFetch("/api/settings", { key: "site-settings", server: true });
 const { data: me } = await useFetch("/api/me", { immediate: loggedIn.value, server: true });
 
 const pageTitle = computed(() => settings.value?.pageTitle || "Cloud Start Page");
 const logoPath = computed(() => settings.value?.logoPath || "/logo.svg");
-const loginButtonText = computed(() => settings.value?.loginButtonText || "Login");
 
 const route = useRoute();
 function isActive(path: string) {

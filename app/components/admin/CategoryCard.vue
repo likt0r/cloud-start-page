@@ -1,16 +1,16 @@
 <script setup lang="ts">
-import type { AdminCategory, AdminService, CompanionApp } from '~/composables/useAdminTree'
+import type { AdminCategory, AdminService, CompanionApp } from "~/composables/useAdminTree";
 
-defineProps<{ cat: AdminCategory }>()
+defineProps<{ cat: AdminCategory }>();
 
 const emit = defineEmits<{
-  edit: [cat: AdminCategory]
-  delete: [type: 'category' | 'service' | 'companion-app', id: number, name: string]
-  'add-service': [categoryId: number]
-  'edit-service': [service: AdminService]
-  'edit-app': [app: CompanionApp]
-  'add-app': [serviceId: number]
-}>()
+  edit: [cat: AdminCategory];
+  delete: [type: "category" | "service" | "companion-app", id: number, name: string];
+  "add-service": [categoryId: number];
+  "edit-service": [service: AdminService];
+  "edit-app": [app: CompanionApp];
+  "add-app": [serviceId: number];
+}>();
 </script>
 
 <template>
@@ -46,12 +46,10 @@ const emit = defineEmits<{
         :service="svc"
         @edit="emit('edit-service', $event)"
         @delete="(type, id, name) => emit('delete', type, id, name)"
-        @edit-app="emit('edit-app', $event)"
-        @add-app="emit('add-app', $event)"
+        @editApp="emit('edit-app', $event)"
+        @addApp="emit('add-app', $event)"
       />
-      <p v-if="!cat.services.length" class="py-3 px-1 text-sm text-muted">
-        No services yet.
-      </p>
+      <p v-if="!cat.services.length" class="py-3 px-1 text-sm text-muted">No services yet.</p>
     </div>
 
     <template #footer>

@@ -1,49 +1,49 @@
 <script setup lang="ts">
-import type { Group } from '~/composables/useAdminGroups'
-import type { UseMutationReturnType } from '@tanstack/vue-query'
+import type { Group } from "~/composables/useAdminGroups";
+import type { UseMutationReturnType } from "@tanstack/vue-query";
 
 const props = defineProps<{
-  open: boolean
-  group: Group | null
-  createMutation: UseMutationReturnType<unknown, Error, { name: string }, unknown>
-  updateMutation: UseMutationReturnType<unknown, Error, { id: number; name: string }, unknown>
-}>()
+  open: boolean;
+  group: Group | null;
+  createMutation: UseMutationReturnType<unknown, Error, { name: string }, unknown>;
+  updateMutation: UseMutationReturnType<unknown, Error, { id: number; name: string }, unknown>;
+}>();
 
 const emit = defineEmits<{
-  'update:open': [value: boolean]
-  saved: []
-}>()
+  "update:open": [value: boolean];
+  saved: [];
+}>();
 
-const form = reactive({ name: '' })
+const form = reactive({ name: "" });
 
 watch(
   () => props.open,
   (open) => {
     if (open) {
-      form.name = props.group?.name ?? ''
+      form.name = props.group?.name ?? "";
     }
   }
-)
+);
 
-type FormError = { name: string; message: string }
+type FormError = { name: string; message: string };
 
 function validate(state: typeof form): FormError[] {
-  const errors: FormError[] = []
-  if (!state.name.trim()) errors.push({ name: 'name', message: 'Required' })
-  return errors
+  const errors: FormError[] = [];
+  if (!state.name.trim()) errors.push({ name: "name", message: "Required" });
+  return errors;
 }
 
 const isPending = computed(
   () => props.createMutation.isPending.value || props.updateMutation.isPending.value
-)
+);
 
 async function onSubmit() {
   if (props.group) {
-    await props.updateMutation.mutateAsync({ id: props.group.id, name: form.name.trim() })
+    await props.updateMutation.mutateAsync({ id: props.group.id, name: form.name.trim() });
   } else {
-    await props.createMutation.mutateAsync({ name: form.name.trim() })
+    await props.createMutation.mutateAsync({ name: form.name.trim() });
   }
-  emit('saved')
+  emit("saved");
 }
 </script>
 
@@ -60,17 +60,8 @@ async function onSubmit() {
         </UFormField>
 
         <div class="flex justify-end gap-2 pt-2">
-          <AppButton
-            label="Cancel"
-            color="neutral"
-            variant="ghost"
-            @click="$emit('update:open', false)"
-          />
-          <AppButton
-            type="submit"
-            :label="group ? 'Save' : 'Create'"
-            :loading="isPending"
-          />
+          <AppButton label="Cancel" color="neutral" variant="ghost" @click="$emit('update:open', false)" />
+          <AppButton type="submit" :label="group ? 'Save' : 'Create'" :loading="isPending" />
         </div>
       </UForm>
     </template>

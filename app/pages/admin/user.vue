@@ -1,12 +1,12 @@
 <script setup lang="ts">
-definePageMeta({ middleware: ['admin'], ssr: false })
+definePageMeta({ middleware: ["admin"], ssr: false });
 
-const { data: me } = await useFetch('/api/me', { server: true })
+const { data: me } = await useFetch("/api/me", { server: true });
 
 const expiresAt = computed(() => {
-  if (!me.value?.expireAt) return null
-  return new Date(me.value.expireAt).toLocaleString()
-})
+  if (!me.value?.expireAt) return null;
+  return new Date(me.value.expireAt).toLocaleString();
+});
 </script>
 
 <template>
@@ -25,7 +25,7 @@ const expiresAt = computed(() => {
         <div class="flex flex-col gap-3 text-sm">
           <div class="flex justify-between">
             <span class="text-muted">Username</span>
-            <span class="font-medium">{{ me?.userName ?? '—' }}</span>
+            <span class="font-medium">{{ me?.userName ?? "—" }}</span>
           </div>
           <div class="flex justify-between">
             <span class="text-muted">Role</span>
@@ -33,7 +33,7 @@ const expiresAt = computed(() => {
           </div>
           <div class="flex justify-between">
             <span class="text-muted">Session expires</span>
-            <span class="font-medium">{{ expiresAt ?? '—' }}</span>
+            <span class="font-medium">{{ expiresAt ?? "—" }}</span>
           </div>
         </div>
       </UCard>

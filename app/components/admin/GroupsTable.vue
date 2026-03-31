@@ -1,15 +1,15 @@
 <script setup lang="ts">
-import type { Group } from '~/composables/useAdminGroups'
+import type { Group } from "~/composables/useAdminGroups";
 
 defineProps<{
-  groups: Group[]
-  isLoading: boolean
-}>()
+  groups: Group[];
+  isLoading: boolean;
+}>();
 
 const emit = defineEmits<{
-  edit: [group: Group]
-  delete: [group: Group]
-}>()
+  edit: [group: Group];
+  delete: [group: Group];
+}>();
 </script>
 
 <template>
@@ -22,11 +22,7 @@ const emit = defineEmits<{
     </div>
     <UCard v-else>
       <div class="flex flex-col divide-y divide-default">
-        <div
-          v-for="group in groups"
-          :key="group.id"
-          class="flex items-center gap-3 py-2 px-1"
-        >
+        <div v-for="group in groups" :key="group.id" class="flex items-center gap-3 py-2 px-1">
           <UIcon name="i-lucide-users" class="size-4 text-muted shrink-0" />
           <span class="flex-1 font-medium">{{ group.name }}</span>
           <div class="flex items-center gap-1">

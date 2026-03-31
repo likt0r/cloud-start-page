@@ -1,0 +1,22 @@
+services:
+  cloud-start-page:
+    build: .
+    ports:
+      - "3000:3000"
+    volumes:
+      - data:/data
+    environment:
+      DATABASE_PATH: /data/db.sqlite
+      ADMIN_GROUP: cloud-admins
+
+      # Keycloak OIDC
+      NUXT_OIDC_PROVIDERS_KEYCLOAK_BASE_URL: https://keycloak.example.com/realms/myrealm
+      NUXT_OIDC_PROVIDERS_KEYCLOAK_CLIENT_ID: cloud-start-page
+      NUXT_OIDC_PROVIDERS_KEYCLOAK_CLIENT_SECRET: ""
+      NUXT_OIDC_PROVIDERS_KEYCLOAK_REDIRECT_URI: https://start.example.com/auth/keycloak/callback
+      NUXT_OIDC_PROVIDERS_KEYCLOAK_LOGOUT_REDIRECT_URI: https://start.example.com
+      NUXT_OIDC_TOKEN_KEY: "" # 48-char random string, e.g.: openssl rand -hex 24
+    restart: unless-stopped
+
+volumes:
+  data:

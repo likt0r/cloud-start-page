@@ -17,4 +17,4 @@ export default withNuxt(pluginRecommended, prettierConfig, {
     "vue/require-default-prop": "off"
   },
   ignores: ["node_modules", "public", "build", "dist"]
-)
+});

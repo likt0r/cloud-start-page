@@ -1,124 +1,138 @@
 <script setup lang="ts">
-import type { AdminCategory, AdminService, CompanionApp } from '~/composables/useAdminTree'
-import type { Group } from '~/composables/useAdminGroups'
+import type { AdminCategory, AdminService, CompanionApp } from "~/composables/useAdminTree";
+import type { Group } from "~/composables/useAdminGroups";
 
-definePageMeta({ middleware: ['admin'], ssr: false })
+definePageMeta({ middleware: ["admin"], ssr: false });
 
 const {
   query,
-  createCategory, updateCategory, deleteCategory,
-  createService, updateService, deleteService,
-  createCompanionApp, updateCompanionApp, deleteCompanionApp
-} = useAdminTree()
+  createCategory,
+  updateCategory,
+  deleteCategory,
+  createService,
+  updateService,
+  deleteService,
+  createCompanionApp,
+  updateCompanionApp,
+  deleteCompanionApp
+} = useAdminTree();
 
-const { query: groupsQuery, createGroup, updateGroup, deleteGroup } = useAdminGroups()
+const { query: groupsQuery, createGroup, updateGroup, deleteGroup } = useAdminGroups();
 
-const toast = useToast()
+const toast = useToast();
 
 // --- Category modal ---
-const catModalOpen = ref(false)
-const editingCategory = ref<AdminCategory | null>(null)
+const catModalOpen = ref(false);
+const editingCategory = ref<AdminCategory | null>(null);
 
 function openCreateCategory() {
-  editingCategory.value = null
-  catModalOpen.value = true
+  editingCategory.value = null;
+  catModalOpen.value = true;
 }
 
 function openEditCategory(cat: AdminCategory) {
-  editingCategory.value = cat
-  catModalOpen.value = true
+  editingCategory.value = cat;
+  catModalOpen.value = true;
 }
 
 function onCategorySaved() {
-  catModalOpen.value = false
-  toast.add({ title: 'Category saved', color: 'success', icon: 'i-lucide-check' })
+  catModalOpen.value = false;
+  toast.add({ title: "Category saved", color: "success", icon: "i-lucide-check" });
 }
 
 // --- Service modal ---
-const svcModalOpen = ref(false)
-const editingService = ref<AdminService | null>(null)
-const defaultCategoryId = ref<number | undefined>()
+const svcModalOpen = ref(false);
+const editingService = ref<AdminService | null>(null);
+const defaultCategoryId = ref<number | undefined>();
 
 function openCreateService(categoryId: number) {
-  editingService.value = null
-  defaultCategoryId.value = categoryId
-  svcModalOpen.value = true
+  editingService.value = null;
+  defaultCategoryId.value = categoryId;
+  svcModalOpen.value = true;
 }
 
 function openEditService(svc: AdminService) {
-  editingService.value = svc
-  defaultCategoryId.value = undefined
-  svcModalOpen.value = true
+  editingService.value = svc;
+  defaultCategoryId.value = undefined;
+  svcModalOpen.value = true;
 }
 
 function onServiceSaved() {
-  svcModalOpen.value = false
-  toast.add({ title: 'Service saved', color: 'success', icon: 'i-lucide-check' })
+  svcModalOpen.value = false;
+  toast.add({ title: "Service saved", color: "success", icon: "i-lucide-check" });
 }
 
 // --- Companion app modal ---
-const appModalOpen = ref(false)
-const editingApp = ref<CompanionApp | null>(null)
-const defaultServiceId = ref(0)
+const appModalOpen = ref(false);
+const editingApp = ref<CompanionApp | null>(null);
+const defaultServiceId = ref(0);
 
 function openCreateApp(serviceId: number) {
-  editingApp.value = null
-  defaultServiceId.value = serviceId
-  appModalOpen.value = true
+  editingApp.value = null;
+  defaultServiceId.value = serviceId;
+  appModalOpen.value = true;
 }
 
 function openEditApp(app: CompanionApp) {
-  editingApp.value = app
-  defaultServiceId.value = app.serviceId
-  appModalOpen.value = true
+  editingApp.value = app;
+  defaultServiceId.value = app.serviceId;
+  appModalOpen.value = true;
 }
 
 function onAppSaved() {
-  appModalOpen.value = false
-  toast.add({ title: 'App saved', color: 'success', icon: 'i-lucide-check' })
+  appModalOpen.value = false;
+  toast.add({ title: "App saved", color: "success", icon: "i-lucide-check" });
 }
 
 // --- Group modal ---
-const groupModalOpen = ref(false)
-const editingGroup = ref<Group | null>(null)
+const groupModalOpen = ref(false);
+const editingGroup = ref<Group | null>(null);
 
 function openCreateGroup() {
-  editingGroup.value = null
-  groupModalOpen.value = true
+  editingGroup.value = null;
+  groupModalOpen.value = true;
 }
 
 function openEditGroup(group: Group) {
-  editingGroup.value = group
-  groupModalOpen.value = true
+  editingGroup.value = group;
+  groupModalOpen.value = true;
 }
 
 function onGroupSaved() {
-  groupModalOpen.value = false
-  toast.add({ title: 'Group saved', color: 'success', icon: 'i-lucide-check' })
+  groupModalOpen.value = false;
+  toast.add({ title: "Group saved", color: "success", icon: "i-lucide-check" });
 }
 
 // --- Delete confirmation ---
-const deleteTarget = ref<{ type: 'category' | 'service' | 'companion-app' | 'group'; id: number; name: string } | null>(null)
-const deleteModalOpen = ref(false)
+const deleteTarget = ref<{
+  type: "category" | "service" | "companion-app" | "group";
+  id: number;
+  name: string;
+} | null>(null);
+const deleteModalOpen = ref(false);
 
-function confirmDelete(type: 'category' | 'service' | 'companion-app' | 'group', id: number, name: string) {
-  deleteTarget.value = { type, id, name }
-  deleteModalOpen.value = true
+function confirmDelete(type: "category" | "service" | "companion-app" | "group", id: number, name: string) {
+  deleteTarget.value = { type, id, name };
+  deleteModalOpen.value = true;
 }
 
 const isDeleting = computed(
-  () => deleteCategory.isPending.value || deleteService.isPending.value || deleteCompanionApp.isPending.value || deleteGroup.isPending.value
-)
+  () =>
+    deleteCategory.isPending.value ||
+    deleteService.isPending.value ||
+    deleteCompanionApp.isPending.value ||
+    deleteGroup.isPending.value
+);
 
 async function executeDelete() {
-  if (!deleteTarget.value) return
-  const { type, id } = deleteTarget.value
-  if (type === 'category') await deleteCategory.mutateAsync(id)
-  else if (type === 'service') await deleteService.mutateAsync(id)
-  else if (type === 'group') await deleteGroup.mutateAsync(id)
-  else await deleteCompanionApp.mutateAsync(id)
-  deleteModalOpen.value = false
-  toast.add({ title: 'Deleted', color: 'neutral', icon: 'i-lucide-trash-2' })
+  if (!deleteTarget.value) return;
+  const { type, id } = deleteTarget.value;
+  if (type === "category") await deleteCategory.mutateAsync(id);
+  else if (type === "service") await deleteService.mutateAsync(id);
+  else if (type === "group") await deleteGroup.mutateAsync(id);
+  else await deleteCompanionApp.mutateAsync(id);
+  deleteModalOpen.value = false;
+  toast.add({ title: "Deleted", color: "neutral", icon: "i-lucide-trash-2" });
 }
 </script>
 
@@ -148,10 +162,10 @@ async function executeDelete() {
         :cat="cat"
         @edit="openEditCategory"
         @delete="confirmDelete"
-        @add-service="openCreateService"
-        @edit-service="openEditService"
-        @edit-app="openEditApp"
-        @add-app="openCreateApp"
+        @addService="openCreateService"
+        @editService="openEditService"
+        @editApp="openEditApp"
+        @addApp="openCreateApp"
       />
       <div v-if="!query.data.value?.length" class="text-center text-muted py-16">
         No categories yet. Create one to get started.
@@ -165,7 +179,7 @@ async function executeDelete() {
       </div>
       <AdminGroupsTable
         :groups="groupsQuery.data.value ?? []"
-        :is-loading="groupsQuery.isPending.value"
+        :isLoading="groupsQuery.isPending.value"
         @edit="openEditGroup"
         @delete="(g) => confirmDelete('group', g.id, g.name)"
       />
@@ -174,16 +188,16 @@ async function executeDelete() {
     <AdminGroupModal
       v-model:open="groupModalOpen"
       :group="editingGroup"
-      :create-mutation="createGroup"
-      :update-mutation="updateGroup"
+      :createMutation="createGroup"
+      :updateMutation="updateGroup"
       @saved="onGroupSaved"
     />
 
     <AdminCategoryModal
       v-model:open="catModalOpen"
       :category="editingCategory"
-      :create-mutation="createCategory"
-      :update-mutation="updateCategory"
+      :createMutation="createCategory"
+      :updateMutation="updateCategory"
       @saved="onCategorySaved"
     />
 
@@ -192,25 +206,25 @@ async function executeDelete() {
       :service="editingService"
       :categories="query.data.value ?? []"
       :groups="groupsQuery.data.value ?? []"
-      :default-category-id="defaultCategoryId"
-      :create-mutation="createService"
-      :update-mutation="updateService"
+      :defaultCategoryId="defaultCategoryId"
+      :createMutation="createService"
+      :updateMutation="updateService"
       @saved="onServiceSaved"
     />
 
     <AdminCompanionAppModal
       v-model:open="appModalOpen"
       :app="editingApp"
-      :service-id="defaultServiceId"
-      :create-mutation="createCompanionApp"
-      :update-mutation="updateCompanionApp"
+      :serviceId="defaultServiceId"
+      :createMutation="createCompanionApp"
+      :updateMutation="updateCompanionApp"
       @saved="onAppSaved"
     />
 
     <AdminDeleteModal
       v-model:open="deleteModalOpen"
       :target="deleteTarget"
-      :is-deleting="isDeleting"
+      :isDeleting="isDeleting"
       @confirm="executeDelete"
     />
   </UContainer>

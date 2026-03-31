@@ -1,52 +1,62 @@
 <script setup lang="ts">
-import type { AdminCategory } from '~/composables/useAdminTree'
-import type { UseMutationReturnType } from '@tanstack/vue-query'
+import type { AdminCategory } from "~/composables/useAdminTree";
+import type { UseMutationReturnType } from "@tanstack/vue-query";
 
 const props = defineProps<{
-  open: boolean
-  category: AdminCategory | null
-  createMutation: UseMutationReturnType<unknown, Error, { title: string; icon: string; sortOrder: number }, unknown>
-  updateMutation: UseMutationReturnType<unknown, Error, { id: number; title: string; icon: string; sortOrder: number }, unknown>
-}>()
+  open: boolean;
+  category: AdminCategory | null;
+  createMutation: UseMutationReturnType<
+    unknown,
+    Error,
+    { title: string; icon: string; sortOrder: number },
+    unknown
+  >;
+  updateMutation: UseMutationReturnType<
+    unknown,
+    Error,
+    { id: number; title: string; icon: string; sortOrder: number },
+    unknown
+  >;
+}>();
 
 const emit = defineEmits<{
-  'update:open': [value: boolean]
-  saved: []
-}>()
+  "update:open": [value: boolean];
+  saved: [];
+}>();
 
-const form = reactive({ title: '', icon: '', sortOrder: 0 })
+const form = reactive({ title: "", icon: "", sortOrder: 0 });
 
 watch(
   () => props.open,
   (open) => {
     if (open) {
-      form.title = props.category?.title ?? ''
-      form.icon = props.category?.icon ?? ''
-      form.sortOrder = props.category?.sortOrder ?? 0
+      form.title = props.category?.title ?? "";
+      form.icon = props.category?.icon ?? "";
+      form.sortOrder = props.category?.sortOrder ?? 0;
     }
   }
-)
+);
 
-type FormError = { name: string; message: string }
+type FormError = { name: string; message: string };
 
 function validate(state: typeof form): FormError[] {
-  const errors: FormError[] = []
-  if (!state.title) errors.push({ name: 'title', message: 'Required' })
-  if (!state.icon) errors.push({ name: 'icon', message: 'Required' })
-  return errors
+  const errors: FormError[] = [];
+  if (!state.title) errors.push({ name: "title", message: "Required" });
+  if (!state.icon) errors.push({ name: "icon", message: "Required" });
+  return errors;
 }
 
 const isPending = computed(
   () => props.createMutation.isPending.value || props.updateMutation.isPending.value
-)
+);
 
 async function onSubmit() {
   if (props.category) {
-    await props.updateMutation.mutateAsync({ id: props.category.id, ...form })
+    await props.updateMutation.mutateAsync({ id: props.category.id, ...form });
   } else {
-    await props.createMutation.mutateAsync({ ...form })
+    await props.createMutation.mutateAsync({ ...form });
   }
-  emit('saved')
+  emit("saved");
 }
 </script>
 
@@ -74,17 +84,8 @@ async function onSubmit() {
         </UFormField>
 
         <div class="flex justify-end gap-2 pt-2">
-          <AppButton
-            label="Cancel"
-            color="neutral"
-            variant="ghost"
-            @click="$emit('update:open', false)"
-          />
-          <AppButton
-            type="submit"
-            :label="category ? 'Save' : 'Create'"
-            :loading="isPending"
-          />
+          <AppButton label="Cancel" color="neutral" variant="ghost" @click="$emit('update:open', false)" />
+          <AppButton type="submit" :label="category ? 'Save' : 'Create'" :loading="isPending" />
         </div>
       </UForm>
     </template>

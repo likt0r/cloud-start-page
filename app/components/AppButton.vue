@@ -15,8 +15,8 @@ const isOutline = computed(() => variant.value === "outline");
       isOutline
         ? 'backdrop-blur-md bg-white/1 hover:bg-white/6 active:primary/20'
         : isSolid
-        ? 'hover:brightness-115 active:brightness-85'
-        : 'hover:bg-current/15 active:bg-current/30'
+          ? 'hover:brightness-115 active:brightness-85'
+          : 'hover:bg-current/15 active:bg-current/30'
     "
   />
 </template>

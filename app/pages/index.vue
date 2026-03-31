@@ -1,7 +1,7 @@
 <script setup lang="ts">
 const { loggedIn, login } = useOidcAuth();
 
-const { data: settings } = await useFetch('/api/settings', { key: 'site-settings', server: true })
+const { data: settings } = await useFetch("/api/settings", { key: "site-settings", server: true });
 
 const {
   data: categories,
@@ -12,7 +12,7 @@ const {
   server: true
 });
 
-const loginButtonText = computed(() => settings.value?.loginButtonText || 'Login')
+const loginButtonText = computed(() => settings.value?.loginButtonText || "Login");
 </script>
 
 <template>

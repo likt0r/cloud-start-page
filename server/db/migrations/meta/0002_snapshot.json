@@ -95,12 +95,8 @@
           "name": "companion_apps_service_id_services_id_fk",
           "tableFrom": "companion_apps",
           "tableTo": "services",
-          "columnsFrom": [
-            "service_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["service_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -130,9 +126,7 @@
       "indexes": {
         "groups_name_unique": {
           "name": "groups_name_unique",
-          "columns": [
-            "name"
-          ],
+          "columns": ["name"],
           "isUnique": true
         }
       },
@@ -165,22 +159,15 @@
           "name": "service_access_groups_service_id_services_id_fk",
           "tableFrom": "service_access_groups",
           "tableTo": "services",
-          "columnsFrom": [
-            "service_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["service_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
       },
       "compositePrimaryKeys": {
         "service_access_groups_service_id_keycloak_group_pk": {
-          "columns": [
-            "service_id",
-            "keycloak_group"
-          ],
+          "columns": ["service_id", "keycloak_group"],
           "name": "service_access_groups_service_id_keycloak_group_pk"
         }
       },
@@ -255,12 +242,8 @@
           "name": "services_category_id_categories_id_fk",
           "tableFrom": "services",
           "tableTo": "categories",
-          "columnsFrom": [
-            "category_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["category_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }

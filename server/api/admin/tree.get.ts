@@ -1,6 +1,6 @@
-import { asc } from 'drizzle-orm'
-import { db } from '../../db/index'
-import { categories } from '../../db/schema'
+import { asc } from "drizzle-orm";
+import { db } from "../../db/index";
+import { categories } from "../../db/schema";
 
 export default defineEventHandler(async () => {
   return db.query.categories.findMany({
@@ -11,5 +11,5 @@ export default defineEventHandler(async () => {
         with: { accessGroups: true, companionApps: true }
       }
     }
-  })
-})
+  });
+});
