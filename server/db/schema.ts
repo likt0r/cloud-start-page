@@ -32,6 +32,11 @@ export const serviceAccessGroups = sqliteTable(
   t => [primaryKey({ columns: [t.serviceId, t.keycloakGroup] })]
 )
 
+export const groups = sqliteTable('groups', {
+  id: integer('id').primaryKey({ autoIncrement: true }),
+  name: text('name').notNull().unique()
+})
+
 export const companionApps = sqliteTable('companion_apps', {
   id: integer('id').primaryKey({ autoIncrement: true }),
   serviceId: integer('service_id')

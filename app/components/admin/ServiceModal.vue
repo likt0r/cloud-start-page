@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import type { AdminCategory, AdminService, ServiceFormPayload } from '~/composables/useAdminTree'
+import type { Group } from '~/composables/useAdminGroups'
 import type { UseMutationReturnType } from '@tanstack/vue-query'
 
 const props = defineProps<{
   open: boolean
   service: AdminService | null
   categories: AdminCategory[]
+  groups: Group[]
   defaultCategoryId?: number
   createMutation: UseMutationReturnType<unknown, Error, ServiceFormPayload, unknown>
   updateMutation: UseMutationReturnType<unknown, Error, { id: number } & ServiceFormPayload, unknown>
@@ -67,6 +69,8 @@ watch(imageFile, async (file) => {
 const categoryOptions = computed(() =>
   props.categories.map((c) => ({ label: c.title, value: c.id }))
 )
+
+const groupOptions = computed(() => props.groups.map((g) => g.name))
 
 type FormError = { name: string; message: string }
 
@@ -158,7 +162,36 @@ async function onSubmit() {
         </UFormField>
 
         <UFormField label="Access Groups" name="accessGroups">
-          <UInputTags v-model="form.accessGroups" placeholder="Add a Keycloak group…" class="w-full" />
+          <USelectMenu
+            v-model="form.accessGroups"
+            :items="groupOptions"
+            multiple
+            class="w-full"
+          >
+            <template #default="{ modelValue }">
+              <div v-if="modelValue?.length" class="flex flex-wrap gap-1 py-0.5">
+                <UBadge
+                  v-for="group in modelValue"
+                  :key="group"
+                  :label="group"
+                  color="secondary"
+                  variant="subtle"
+                  size="sm"
+                >
+                  <template #trailing>
+                    <button
+                      type="button"
+                      class="cursor-pointer"
+                      @click.stop="form.accessGroups = form.accessGroups.filter(g => g !== group)"
+                    >
+                      <UIcon name="i-lucide-x" class="size-3" />
+                    </button>
+                  </template>
+                </UBadge>
+              </div>
+              <span v-else class="text-[var(--ui-color-gray-400)]">Select groups…</span>
+            </template>
+          </USelectMenu>
         </UFormField>
 
         <div class="flex justify-end gap-2 pt-2">

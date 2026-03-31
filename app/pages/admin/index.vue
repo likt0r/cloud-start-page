@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { AdminCategory, AdminService, CompanionApp } from '~/composables/useAdminTree'
+import type { Group } from '~/composables/useAdminGroups'
 
 definePageMeta({ middleware: ['admin'], ssr: false })
 
@@ -9,6 +10,8 @@ const {
   createService, updateService, deleteService,
   createCompanionApp, updateCompanionApp, deleteCompanionApp
 } = useAdminTree()
+
+const { query: groupsQuery, createGroup, updateGroup, deleteGroup } = useAdminGroups()
 
 const toast = useToast()
 
@@ -75,17 +78,36 @@ function onAppSaved() {
   toast.add({ title: 'App saved', color: 'success', icon: 'i-lucide-check' })
 }
 
+// --- Group modal ---
+const groupModalOpen = ref(false)
+const editingGroup = ref<Group | null>(null)
+
+function openCreateGroup() {
+  editingGroup.value = null
+  groupModalOpen.value = true
+}
+
+function openEditGroup(group: Group) {
+  editingGroup.value = group
+  groupModalOpen.value = true
+}
+
+function onGroupSaved() {
+  groupModalOpen.value = false
+  toast.add({ title: 'Group saved', color: 'success', icon: 'i-lucide-check' })
+}
+
 // --- Delete confirmation ---
-const deleteTarget = ref<{ type: 'category' | 'service' | 'companion-app'; id: number; name: string } | null>(null)
+const deleteTarget = ref<{ type: 'category' | 'service' | 'companion-app' | 'group'; id: number; name: string } | null>(null)
 const deleteModalOpen = ref(false)
 
-function confirmDelete(type: 'category' | 'service' | 'companion-app', id: number, name: string) {
+function confirmDelete(type: 'category' | 'service' | 'companion-app' | 'group', id: number, name: string) {
   deleteTarget.value = { type, id, name }
   deleteModalOpen.value = true
 }
 
 const isDeleting = computed(
-  () => deleteCategory.isPending.value || deleteService.isPending.value || deleteCompanionApp.isPending.value
+  () => deleteCategory.isPending.value || deleteService.isPending.value || deleteCompanionApp.isPending.value || deleteGroup.isPending.value
 )
 
 async function executeDelete() {
@@ -93,6 +115,7 @@ async function executeDelete() {
   const { type, id } = deleteTarget.value
   if (type === 'category') await deleteCategory.mutateAsync(id)
   else if (type === 'service') await deleteService.mutateAsync(id)
+  else if (type === 'group') await deleteGroup.mutateAsync(id)
   else await deleteCompanionApp.mutateAsync(id)
   deleteModalOpen.value = false
   toast.add({ title: 'Deleted', color: 'neutral', icon: 'i-lucide-trash-2' })
@@ -135,6 +158,27 @@ async function executeDelete() {
       </div>
     </div>
 
+    <div class="mt-10">
+      <div class="flex items-center justify-between mb-4">
+        <h2 class="text-xl font-semibold">Groups</h2>
+        <AppButton label="New Group" icon="i-lucide-plus" variant="outline" @click="openCreateGroup()" />
+      </div>
+      <AdminGroupsTable
+        :groups="groupsQuery.data.value ?? []"
+        :is-loading="groupsQuery.isPending.value"
+        @edit="openEditGroup"
+        @delete="(g) => confirmDelete('group', g.id, g.name)"
+      />
+    </div>
+
+    <AdminGroupModal
+      v-model:open="groupModalOpen"
+      :group="editingGroup"
+      :create-mutation="createGroup"
+      :update-mutation="updateGroup"
+      @saved="onGroupSaved"
+    />
+
     <AdminCategoryModal
       v-model:open="catModalOpen"
       :category="editingCategory"
@@ -147,6 +191,7 @@ async function executeDelete() {
       v-model:open="svcModalOpen"
       :service="editingService"
       :categories="query.data.value ?? []"
+      :groups="groupsQuery.data.value ?? []"
       :default-category-id="defaultCategoryId"
       :create-mutation="createService"
       :update-mutation="updateService"

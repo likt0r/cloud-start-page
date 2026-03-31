@@ -7,8 +7,14 @@ import { createDatabase, DB_PATH } from '../db/client'
 export default defineNitroPlugin(() => {
   mkdirSync(dirname(DB_PATH), { recursive: true })
   const sqlite = createDatabase(DB_PATH)
-  migrate(drizzle(sqlite), {
-    migrationsFolder: join(process.cwd(), 'server/db/migrations')
-  })
-  sqlite.close()
+  try {
+    migrate(drizzle(sqlite), {
+      migrationsFolder: join(process.cwd(), 'server/db/migrations')
+    })
+  } catch (err) {
+    console.error('[migrate] Migration failed:', err)
+    throw err
+  } finally {
+    sqlite.close()
+  }
 })

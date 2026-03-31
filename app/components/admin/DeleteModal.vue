@@ -1,7 +1,7 @@
 <script setup lang="ts">
 defineProps<{
   open: boolean
-  target: { type: 'category' | 'service' | 'companion-app'; id: number; name: string } | null
+  target: { type: 'category' | 'service' | 'companion-app' | 'group'; id: number; name: string } | null
   isDeleting: boolean
 }>()
 
@@ -19,6 +19,10 @@ const emit = defineEmits<{
         <template v-if="target?.type === 'category'">
           <br />
           <span class="text-muted">This will also delete all services in this category.</span>
+        </template>
+        <template v-if="target?.type === 'group'">
+          <br />
+          <span class="text-muted">This will remove the group from all services that use it.</span>
         </template>
         This cannot be undone.
       </p>
