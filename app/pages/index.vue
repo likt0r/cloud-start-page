@@ -38,16 +38,14 @@ const {
       <div v-else-if="!categories?.length" class="text-center text-muted py-16">No services available.</div>
 
       <div v-else class="flex flex-col gap-10">
-        <section v-for="category in categories" :key="category.id">
-          <div class="flex items-center gap-2 mb-4">
-            <UIcon :name="category.icon" class="size-5 text-muted" />
-            <h2 class="text-lg font-medium">{{ category.title }}</h2>
-          </div>
-
-          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-            <ServiceCard v-for="service in category.services" :key="service.id" :service="service" />
-          </div>
-        </section>
+        <CategorySection
+          v-for="category in categories"
+          :key="category.id"
+          :icon="category.icon"
+          :title="category.title"
+        >
+          <ServiceCard v-for="service in category.services" :key="service.id" :service="service" />
+        </CategorySection>
       </div>
     </template>
   </UContainer>

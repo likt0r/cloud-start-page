@@ -1,3 +1,5 @@
+const glassSurface = "backdrop-blur-md !bg-black/5 ring-white/5";
+
 export default defineAppConfig({
   ui: {
     colors: {
@@ -7,12 +9,22 @@ export default defineAppConfig({
     },
     card: {
       slots: {
-        root: "backdrop-blur-md bg-black/85 ring-white/5"
+        root: glassSurface
       }
     },
     modal: {
       slots: {
-        content: "backdrop-blur-md bg-black/85 ring-white/5"
+        content: glassSurface
+      }
+    },
+    toast: {
+      slots: {
+        root: glassSurface
+      }
+    },
+    selectMenu: {
+      slots: {
+        content: glassSurface
       }
     },
     header: {
