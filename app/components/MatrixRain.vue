@@ -71,6 +71,17 @@ onMounted(() => {
           ctx.fillText(randomChar(), x, (drops[i]! - 1) * FONT_SIZE);
         }
 
+        // Randomly mutate 1-2 chars in the visible tail for the shimmer effect
+        const tailStart = drops[i]! - TAIL_ROWS;
+        if (tailStart >= 0) {
+          const mutations = Math.random() < 0.5 ? 1 : 2;
+          for (let m = 0; m < mutations; m++) {
+            const mutRow = tailStart + Math.floor(Math.random() * (TAIL_ROWS - 2));
+            ctx.fillStyle = "rgba(180, 80, 20, 0.45)";
+            ctx.fillText(randomChar()!, x, mutRow * FONT_SIZE);
+          }
+        }
+
         drops[i]!++;
 
         // Reset when drop exits the bottom
