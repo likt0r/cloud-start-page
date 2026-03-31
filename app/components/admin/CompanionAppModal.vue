@@ -18,12 +18,20 @@ const emit = defineEmits<{
 const platformOptions = [
   { label: '—', value: null },
   { label: 'Android (Play Store)', value: 'android' },
-  { label: 'iOS (App Store)', value: 'ios' }
+  { label: 'iOS (App Store)', value: 'ios' },
+  { label: 'Windows', value: 'windows' },
+  { label: 'Linux', value: 'linux' },
+  { label: 'macOS', value: 'macos' },
+  { label: 'PC (generic)', value: 'pc' }
 ]
 
 function platformIcon(platform: string | null) {
   if (platform === 'android') return 'i-simple-icons-googleplay'
   if (platform === 'ios') return 'i-simple-icons-appstore'
+  if (platform === 'windows') return 'i-simple-icons-windows'
+  if (platform === 'linux') return 'i-simple-icons-linux'
+  if (platform === 'macos') return 'i-simple-icons-apple'
+  if (platform === 'pc') return 'i-lucide-monitor'
   return 'i-lucide-smartphone'
 }
 
