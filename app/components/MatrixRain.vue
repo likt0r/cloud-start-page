@@ -9,8 +9,8 @@ const CHARS =
   "ｦｧｨｩｪｫｬｭｮｯｱｲｳｴｵ" +
   "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
-function randomChar() {
-  return CHARS[Math.floor(Math.random() * CHARS.length)];
+function randomChar(): string {
+  return CHARS[Math.floor(Math.random() * CHARS.length)]!;
 }
 
 onMounted(() => {

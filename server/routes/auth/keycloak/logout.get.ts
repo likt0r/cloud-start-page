@@ -21,7 +21,7 @@ export default defineEventHandler(async (event) => {
       password: process.env.NUXT_OIDC_SESSION_SECRET!
     });
 
-    const sessionId = session.id;
+    const sessionId = session.id as string;
     const tokenKey = process.env.NUXT_OIDC_TOKEN_KEY!;
 
     const persistentSession = await useStorage("oidc").getItem<{
@@ -34,15 +34,15 @@ export default defineEventHandler(async (event) => {
 
       const secretKey = await subtle.importKey(
         "raw",
-        base64ToUint8Array(tokenKey),
+        base64ToUint8Array(tokenKey) as Uint8Array<ArrayBuffer>,
         { name: "AES-GCM", length: 256 },
         true,
         ["encrypt", "decrypt"]
       );
 
       const { encryptedToken, iv } = persistentSession.idToken;
-      const encryptedBytes = base64ToUint8Array(encryptedToken);
-      const ivBytes = base64ToUint8Array(iv);
+      const encryptedBytes = base64ToUint8Array(encryptedToken) as Uint8Array<ArrayBuffer>;
+      const ivBytes = base64ToUint8Array(iv) as Uint8Array<ArrayBuffer>;
 
       const decrypted = await subtle.decrypt({ name: "AES-GCM", iv: ivBytes }, secretKey, encryptedBytes);
 
