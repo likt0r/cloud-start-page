@@ -1,70 +1,82 @@
 <script setup lang="ts">
-const { loggedIn, login } = useOidcAuth();
+definePageMeta({ middleware: ['admin'], ssr: false })
 
-const {
-  data: me,
-  pending,
-  error
-} = await useFetch("/api/me", {
-  immediate: loggedIn.value,
-  server: true
-});
+const { data: me } = await useFetch('/api/me', { server: true })
+
+const expiresAt = computed(() => {
+  if (!me.value?.expireAt) return null
+  return new Date(me.value.expireAt).toLocaleString()
+})
 </script>
 
 <template>
-  <UContainer class="py-8">
-    <div v-if="!loggedIn" class="flex flex-col items-center gap-4 py-16">
-      <p class="text-muted">You are not logged in.</p>
-      <AppButton label="Login with Keycloak" icon="i-lucide-log-in" size="lg" @click="login()" />
-    </div>
+  <UContainer class="py-8 max-w-lg">
+    <h1 class="text-2xl font-semibold mb-6">Profile</h1>
 
-    <div v-else>
-      <div class="flex items-center justify-between mb-6">
-        <h1 class="text-2xl font-semibold">Session Debug</h1>
-        <AppButton
-          v-if="me?.isAdmin"
-          label="Admin"
-          icon="i-lucide-settings"
-          color="neutral"
-          variant="ghost"
-          to="/admin"
-        />
-      </div>
-
-      <div v-if="pending" class="text-muted">Loading…</div>
-      <div v-else-if="error" class="text-red-500">Failed to load session: {{ error.message }}</div>
-
-      <div v-else-if="me" class="flex flex-col gap-6">
-        <div>
-          <h2 class="text-sm font-medium text-muted uppercase tracking-wide mb-1">Username</h2>
-          <p class="font-mono">{{ me.userName ?? "(not set)" }}</p>
-        </div>
-
-        <div>
-          <h2 class="text-sm font-medium text-muted uppercase tracking-wide mb-1">
-            Groups ({{ me.groups.length }})
-          </h2>
-          <div v-if="me.groups.length" class="flex flex-wrap gap-2">
-            <UBadge v-for="group in me.groups" :key="group" :label="group" color="primary" variant="subtle" />
+    <div class="flex flex-col gap-4">
+      <UCard>
+        <template #header>
+          <div class="flex items-center gap-3">
+            <UIcon name="i-lucide-user" class="size-5 text-primary" />
+            <span class="font-semibold">Account</span>
           </div>
-          <p v-else class="text-muted text-sm">No groups</p>
-        </div>
+        </template>
 
-        <div>
-          <h2 class="text-sm font-medium text-muted uppercase tracking-wide mb-1">
-            Client Scopes ({{ me.scopes.length }})
-          </h2>
-          <div v-if="me.scopes.length" class="flex flex-wrap gap-2">
-            <UBadge v-for="scope in me.scopes" :key="scope" :label="scope" color="neutral" variant="subtle" />
+        <div class="flex flex-col gap-3 text-sm">
+          <div class="flex justify-between">
+            <span class="text-muted">Username</span>
+            <span class="font-medium">{{ me?.userName ?? '—' }}</span>
           </div>
-          <p v-else class="text-muted text-sm">No scope claim in token</p>
+          <div class="flex justify-between">
+            <span class="text-muted">Role</span>
+            <UBadge :label="me?.isAdmin ? 'Admin' : 'User'" color="secondary" variant="subtle" size="sm" />
+          </div>
+          <div class="flex justify-between">
+            <span class="text-muted">Session expires</span>
+            <span class="font-medium">{{ expiresAt ?? '—' }}</span>
+          </div>
         </div>
+      </UCard>
 
-        <div>
-          <h2 class="text-sm font-medium text-muted uppercase tracking-wide mb-1">Session Expires</h2>
-          <p class="font-mono text-sm">{{ new Date(me.expireAt * 1000).toLocaleString() }}</p>
+      <UCard v-if="me?.groups?.length">
+        <template #header>
+          <div class="flex items-center gap-3">
+            <UIcon name="i-lucide-users" class="size-5 text-primary" />
+            <span class="font-semibold">Groups</span>
+          </div>
+        </template>
+
+        <div class="flex flex-wrap gap-2">
+          <UBadge
+            v-for="group in me.groups"
+            :key="group"
+            :label="group"
+            color="secondary"
+            variant="outline"
+            size="sm"
+          />
         </div>
-      </div>
+      </UCard>
+
+      <UCard v-if="me?.scopes?.length">
+        <template #header>
+          <div class="flex items-center gap-3">
+            <UIcon name="i-lucide-shield" class="size-5 text-primary" />
+            <span class="font-semibold">Scopes</span>
+          </div>
+        </template>
+
+        <div class="flex flex-wrap gap-2">
+          <UBadge
+            v-for="scope in me.scopes"
+            :key="scope"
+            :label="scope"
+            color="secondary"
+            variant="subtle"
+            size="sm"
+          />
+        </div>
+      </UCard>
     </div>
   </UContainer>
 </template>

@@ -1,69 +1,69 @@
 <script setup lang="ts">
-import type { SettingsUpdatePayload } from '~/composables/useAdminSettings'
+import type { SettingsUpdatePayload } from "~/composables/useAdminSettings";
 
-definePageMeta({ middleware: ['admin'], ssr: false })
+definePageMeta({ middleware: ["admin"], ssr: false });
 
-const { query, updateSettings } = useAdminSettings()
-const toast = useToast()
+const { query, updateSettings } = useAdminSettings();
+const toast = useToast();
 
 const form = reactive<SettingsUpdatePayload>({
-  loginButtonText: '',
-  pageTitle: '',
-  logoPath: '',
-  logoSmallPath: ''
-})
+  loginButtonText: "",
+  pageTitle: "",
+  logoPath: "",
+  logoSmallPath: ""
+});
 
 watch(
   () => query.data.value,
   (data) => {
     if (data) {
-      form.loginButtonText = data.loginButtonText
-      form.pageTitle = data.pageTitle
-      form.logoPath = data.logoPath
-      form.logoSmallPath = data.logoSmallPath
+      form.loginButtonText = data.loginButtonText;
+      form.pageTitle = data.pageTitle;
+      form.logoPath = data.logoPath;
+      form.logoSmallPath = data.logoSmallPath;
     }
   },
   { immediate: true }
-)
+);
 
-const logoFile = ref<File | null>(null)
-const logoSmallFile = ref<File | null>(null)
-const logoUploading = ref(false)
-const logoSmallUploading = ref(false)
-const logoError = ref('')
-const logoSmallError = ref('')
+const logoFile = ref<File | null>(null);
+const logoSmallFile = ref<File | null>(null);
+const logoUploading = ref(false);
+const logoSmallUploading = ref(false);
+const logoError = ref("");
+const logoSmallError = ref("");
 
 async function uploadLogo(
   file: File,
-  field: 'logoPath' | 'logoSmallPath',
+  field: "logoPath" | "logoSmallPath",
   uploadingRef: Ref<boolean>,
   errorRef: Ref<string>
 ) {
-  uploadingRef.value = true
-  errorRef.value = ''
+  uploadingRef.value = true;
+  errorRef.value = "";
   try {
-    const fd = new FormData()
-    fd.append('file', file)
-    const { path } = await $fetch<{ path: string }>('/api/admin/upload', { method: 'POST', body: fd })
-    form[field] = path
+    const fd = new FormData();
+    fd.append("file", file);
+    const { path } = await $fetch<{ path: string }>("/api/admin/upload", { method: "POST", body: fd });
+    form[field] = path;
   } catch (e: any) {
-    errorRef.value = e?.data?.message ?? 'Upload failed'
+    errorRef.value = e?.data?.message ?? "Upload failed";
   } finally {
-    uploadingRef.value = false
+    uploadingRef.value = false;
   }
 }
 
-watch(logoFile, (f) => f && uploadLogo(f, 'logoPath', logoUploading, logoError))
-watch(logoSmallFile, (f) => f && uploadLogo(f, 'logoSmallPath', logoSmallUploading, logoSmallError))
+watch(logoFile, (f) => f && uploadLogo(f, "logoPath", logoUploading, logoError));
+watch(logoSmallFile, (f) => f && uploadLogo(f, "logoSmallPath", logoSmallUploading, logoSmallError));
 
 async function onSubmit() {
-  await updateSettings.mutateAsync({ ...form })
-  await refreshNuxtData('site-settings')
-  toast.add({ title: 'Settings saved', color: 'success', icon: 'i-lucide-check' })
+  await updateSettings.mutateAsync({ ...form });
+  await refreshNuxtData("site-settings");
+  toast.add({ title: "Settings saved", color: "success", icon: "i-lucide-check" });
 }
 
-const isSaving = computed(() => updateSettings.isPending.value)
-const isUploading = computed(() => logoUploading.value || logoSmallUploading.value)
+const isSaving = computed(() => updateSettings.isPending.value);
+const isUploading = computed(() => logoUploading.value || logoSmallUploading.value);
 </script>
 
 <template>
@@ -142,7 +142,9 @@ const isUploading = computed(() => logoUploading.value || logoSmallUploading.val
               @change="(e) => { const f = (e.target as HTMLInputElement).files?.[0]; if (f) logoSmallFile = f }"
             />
           </div>
-          <p v-if="logoSmallError" class="text-[var(--ui-color-error-500)] text-xs mt-1">{{ logoSmallError }}</p>
+          <p v-if="logoSmallError" class="text-[var(--ui-color-error-500)] text-xs mt-1">
+            {{ logoSmallError }}
+          </p>
           <p v-if="form.logoSmallPath" class="text-xs text-muted mt-1">{{ form.logoSmallPath }}</p>
         </UFormField>
 
@@ -151,6 +153,8 @@ const isUploading = computed(() => logoUploading.value || logoSmallUploading.val
             type="submit"
             label="Save Settings"
             :loading="isSaving"
+            color="primary"
+            variant="outline"
             :disabled="isUploading"
           />
         </div>
