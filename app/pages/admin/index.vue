@@ -169,6 +169,12 @@ async function executeDelete() {
           <div v-for="svc in cat.services" :key="svc.id">
             <!-- Service row -->
             <div class="flex items-center gap-3 py-3 px-1">
+              <img
+                v-if="svc.imagePath"
+                :src="svc.imagePath"
+                :alt="svc.name"
+                class="h-6 w-6 rounded object-contain shrink-0"
+              />
               <span class="font-medium flex-1">{{ svc.name }}</span>
               <a
                 :href="svc.url"

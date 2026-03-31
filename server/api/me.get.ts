@@ -11,7 +11,7 @@ export default defineEventHandler(async (event) => {
   const scopeString = session.claims?.scope as string | undefined
   const scopes = scopeString ? scopeString.split(' ').filter(Boolean) : []
 
-  const adminGroup = process.env.ADMIN_GROUP
+  const adminGroup = useRuntimeConfig(event).adminGroup
   const isAdmin = !!adminGroup && groups.includes(adminGroup)
 
   return {

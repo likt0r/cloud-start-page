@@ -26,6 +26,10 @@ const form = reactive({
   accessGroups: [] as string[]
 })
 
+const imageFile = ref<File | null>(null)
+const imageUploading = ref(false)
+const imageError = ref('')
+
 watch(
   () => props.open,
   (open) => {
@@ -37,9 +41,28 @@ watch(
       form.imagePath = props.service?.imagePath ?? ''
       form.sortOrder = props.service?.sortOrder ?? 0
       form.accessGroups = props.service?.accessGroups.map((g) => g.keycloakGroup) ?? []
+      imageFile.value = null
+      imageError.value = ''
     }
   }
 )
+
+watch(imageFile, async (file) => {
+  if (!file) return
+  imageUploading.value = true
+  imageError.value = ''
+  try {
+    const fd = new FormData()
+    fd.append('file', file)
+    const { path } = await $fetch<{ path: string }>('/api/admin/upload', { method: 'POST', body: fd })
+    form.imagePath = path
+  } catch (e: any) {
+    imageError.value = e?.data?.message ?? 'Upload failed'
+    imageFile.value = null
+  } finally {
+    imageUploading.value = false
+  }
+})
 
 const categoryOptions = computed(() =>
   props.categories.map((c) => ({ label: c.title, value: c.id }))
@@ -102,8 +125,32 @@ async function onSubmit() {
           <UTextarea v-model="form.description" placeholder="Short description…" :rows="3" class="w-full" />
         </UFormField>
 
-        <UFormField label="Image Path" name="imagePath">
-          <UInput v-model="form.imagePath" placeholder="/img/gitea.png" class="w-full" />
+        <UFormField label="Logo" name="imagePath">
+          <div class="flex items-center gap-3">
+            <img
+              v-if="form.imagePath && !imageFile"
+              :src="form.imagePath"
+              :alt="form.name"
+              class="h-10 w-10 rounded object-contain bg-elevated shrink-0"
+            />
+            <UFileUpload
+              v-model="imageFile"
+              variant="button"
+              accept="image/*"
+              :disabled="imageUploading"
+              :label="imageUploading ? 'Uploading…' : (form.imagePath ? 'Replace image' : 'Choose image')"
+            />
+            <UButton
+              v-if="form.imagePath"
+              icon="i-lucide-x"
+              color="neutral"
+              variant="ghost"
+              size="xs"
+              aria-label="Remove image"
+              @click="form.imagePath = ''; imageFile = null"
+            />
+          </div>
+          <p v-if="imageError" class="text-[var(--ui-color-error-500)] text-xs mt-1">{{ imageError }}</p>
         </UFormField>
 
         <UFormField label="Sort Order" name="sortOrder">
@@ -125,6 +172,7 @@ async function onSubmit() {
             type="submit"
             :label="service ? 'Save' : 'Create'"
             :loading="isPending"
+            :disabled="imageUploading"
           />
         </div>
       </UForm>

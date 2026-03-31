@@ -14,7 +14,7 @@ export async function assertAdmin(event: H3Event): Promise<void> {
     throw createError({ statusCode: 401, message: 'Unauthorized' })
   }
 
-  const adminGroup = process.env.ADMIN_GROUP
+  const adminGroup = useRuntimeConfig(event).adminGroup
   if (!adminGroup) {
     throw createError({ statusCode: 500, message: 'ADMIN_GROUP is not configured' })
   }

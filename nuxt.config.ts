@@ -8,6 +8,12 @@ if (process.env.NODE_ENV !== "production" && process.env.HOST == null) {
 export default defineNuxtConfig({
   modules: ["@nuxt/eslint", "@nuxt/ui", "nuxt-oidc-auth"],
 
+  runtimeConfig: {
+    uploadDir: ".data/uploads",
+    adminGroup: "cloud-admins",
+    dbPath: ".data/db.sqlite"
+  },
+
   devtools: {
     enabled: true
   },
