@@ -34,11 +34,11 @@ onMounted(() => {
   const onResize = () => init();
   window.addEventListener("resize", onResize);
 
-  function draw() {
+  function tick() {
     frame++;
 
     // Fade previous frame toward black every frame for smooth glow decay
-    ctx.fillStyle = "rgba(0, 0, 0, 0.06";
+    ctx.fillStyle = "rgba(0, 0, 0, 0.06)";
     ctx.fillRect(0, 0, el.width, el.height);
 
     // Only advance drops every SPEED frames
@@ -53,25 +53,25 @@ onMounted(() => {
           ctx.fillRect(i * FONT_SIZE, 0, FONT_SIZE, clearUntilRow * FONT_SIZE);
         }
 
-        if (drops[i] < 0) {
-          drops[i]++;
+        if (drops[i]! < 0) {
+          drops[i]!++;
           continue;
         }
 
         const x = i * FONT_SIZE;
-        const y = drops[i] * FONT_SIZE;
+        const y = drops[i]! * FONT_SIZE;
 
         // Bright white head
         ctx.fillStyle = "rgba(255, 240, 220, 0.95)";
         ctx.fillText(randomChar(), x, y);
 
         // Orange shoulder — overwrites last frame's white one row back
-        if (drops[i] > 0) {
+        if (drops[i]! > 0) {
           ctx.fillStyle = "#FF5E1F";
-          ctx.fillText(randomChar(), x, (drops[i] - 1) * FONT_SIZE);
+          ctx.fillText(randomChar(), x, (drops[i]! - 1) * FONT_SIZE);
         }
 
-        drops[i]++;
+        drops[i]!++;
 
         // Reset when drop exits the bottom
         if (y > el.height + FONT_SIZE * TAIL_ROWS) {
@@ -79,9 +79,16 @@ onMounted(() => {
         }
       }
     }
+  }
 
+  function draw() {
+    tick();
     animationId = requestAnimationFrame(draw);
   }
+
+  // Pre-warm: simulate ~5s of frames so the screen starts populated
+  const WARMUP_FRAMES = Math.round(60 * 7);
+  for (let w = 0; w < WARMUP_FRAMES; w++) tick();
 
   draw();
 
