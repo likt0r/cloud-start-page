@@ -36,11 +36,15 @@ export default defineNuxtConfig({
     defaultProvider: "keycloak",
     providers: {
       keycloak: {
-        baseUrl: "",
+        baseUrl: process.env.NUXT_OIDC_PROVIDERS_KEYCLOAK_BASE_URL ?? "",
         clientId: "",
         clientSecret: "",
         redirectUri: "",
         logoutRedirectUri: "",
+        authorizationUrl: "",
+        tokenUrl: "",
+        userInfoUrl: "",
+        logoutUrl: "",
         userNameClaim: "preferred_username",
         optionalClaims: ["groups"]
       }
