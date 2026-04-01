@@ -1,7 +1,13 @@
 <script setup lang="ts">
 definePageMeta({ middleware: ["admin"], ssr: false });
 
-const { data: me } = await useFetch("/api/me", { server: true });
+const { data: me } = await useFetch<{
+  userName?: string;
+  groups: string[];
+  scopes: string[];
+  expireAt?: number;
+  isAdmin: boolean;
+}>("/api/me", { server: true });
 
 const expiresAt = computed(() => {
   if (!me.value?.expireAt) return null;
