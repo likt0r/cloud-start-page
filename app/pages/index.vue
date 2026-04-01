@@ -17,9 +17,8 @@ const loginButtonText = computed(() => settings.value?.loginButtonText || "Login
 
 <template>
   <UContainer class="py-10">
-    <div v-if="!loggedIn" class="flex flex-col items-center gap-6 py-24">
+    <div v-if="!loggedIn" class="flex flex-col items-center justify-center gap-6 min-h-[calc(100vh-10rem)]">
       <img src="/mean-robot.svg" alt="Cloud Start Page" class="h-64 w-auto" />
-      <div class="text-center"></div>
       <AppButton
         :label="loginButtonText"
         color="primary"
