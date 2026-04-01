@@ -41,10 +41,11 @@ export default defineNuxtConfig({
         clientSecret: "",
         redirectUri: "",
         logoutRedirectUri: "",
-        authorizationUrl: "",
-        tokenUrl: "",
-        userInfoUrl: "",
-        logoutUrl: "",
+        // Non-empty placeholders so Nuxt runtime env var overrides survive configMerger's defu merge
+        authorizationUrl: "https://placeholder/protocol/openid-connect/auth",
+        tokenUrl: "https://placeholder/protocol/openid-connect/token",
+        userInfoUrl: "https://placeholder/protocol/openid-connect/userinfo",
+        logoutUrl: "https://placeholder/protocol/openid-connect/logout",
         userNameClaim: "preferred_username",
         optionalClaims: ["groups"]
       }
