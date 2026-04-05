@@ -1,8 +1,10 @@
 <script setup lang="ts">
 const canvas = ref<HTMLCanvasElement | null>(null);
 let animationId = 0;
-
+let frame = 0;
+const SPEED = 3; // advance drops every N frames
 const FONT_SIZE = 14;
+const WARMUP_FRAMES = Math.round(60 * 3);
 const TAIL_ROWS = 24; // rows behind the drop still visibly fading; rows above are cleared to pure black
 const CHARS =
   "アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン" +
@@ -18,8 +20,6 @@ onMounted(() => {
   const ctx = el.getContext("2d")!;
 
   let drops: number[] = [];
-  let frame = 0;
-  const SPEED = 3; // advance drops every N frames
 
   function init() {
     el.width = window.innerWidth;
@@ -98,7 +98,7 @@ onMounted(() => {
   }
 
   // Pre-warm: simulate ~5s of frames so the screen starts populated
-  const WARMUP_FRAMES = Math.round(60 * 7);
+
   for (let w = 0; w < WARMUP_FRAMES; w++) tick();
 
   draw();
