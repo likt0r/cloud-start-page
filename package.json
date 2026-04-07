@@ -1,40 +1,23 @@
 {
-  "name": "cloud-start-page",
+  "name": "cloud-start-page-monorepo",
   "private": true,
   "type": "module",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
   "scripts": {
-    "build": "nuxt build",
-    "dev": "nuxt dev",
-    "preview": "nuxt preview",
-    "postinstall": "nuxt prepare",
-    "lint": "eslint .",
-    "typecheck": "nuxt typecheck",
-    "db:generate": "drizzle-kit generate",
-    "db:migrate": "tsx server/db/migrate.ts",
+    "dev": "npm run dev -w cloud-start-page",
+    "build": "npm run build -w cloud-start-page",
+    "preview": "npm run preview -w cloud-start-page",
+    "lint": "npm run lint -w cloud-start-page",
+    "typecheck": "npm run typecheck -w cloud-start-page",
+    "db:generate": "npm run db:generate -w cloud-start-page",
+    "db:migrate": "npm run db:migrate -w cloud-start-page",
     "release": "release-it"
   },
-  "dependencies": {
-    "@iconify-json/lucide": "^1.2.98",
-    "@iconify-json/simple-icons": "^1.2.74",
-    "@nuxt/ui": "^4.5.1",
-    "@tanstack/vue-query": "^5.95.2",
-    "better-sqlite3": "^12.8.0",
-    "drizzle-orm": "^0.44.0",
-    "nuxt": "^4.4.2",
-    "nuxt-oidc-auth": "v1.0.0-beta.10",
-    "tailwindcss": "^4.2.1"
-  },
   "devDependencies": {
-    "@nuxt/eslint": "^1.15.2",
-    "@types/better-sqlite3": "^7.6.13",
-    "drizzle-kit": "^0.31.0",
-    "eslint": "^10.0.3",
-    "eslint-config-prettier": "^10.1.8",
-    "eslint-plugin-prettier": "^5.5.5",
-    "release-it": "^19.2.4",
-    "tsx": "^4.21.0",
-    "typescript": "^5.9.3",
-    "vue-tsc": "^3.2.5"
+    "release-it": "^19.2.4"
   },
   "version": "1.1.0"
 }

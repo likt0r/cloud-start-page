@@ -47,7 +47,10 @@ export default defineNuxtConfig({
         userInfoUrl: "https://placeholder/protocol/openid-connect/userinfo",
         logoutUrl: "https://placeholder/protocol/openid-connect/logout",
         userNameClaim: "preferred_username",
-        optionalClaims: ["groups"]
+        optionalClaims: ["groups"],
+        // Preset enables JWKS + exp checks; JWTExpired usually means OS clock ahead of Keycloak.
+        // Set NUXT_OIDC_VALIDATE_ACCESS_TOKEN=true after syncing time (timedatectl / NTP) if you want strict verification.
+        validateAccessToken: process.env.NUXT_OIDC_VALIDATE_ACCESS_TOKEN === "true"
       }
     },
     session: {

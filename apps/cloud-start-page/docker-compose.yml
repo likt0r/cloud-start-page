@@ -1,6 +1,8 @@
 services:
   cloud-start-page:
-    build: .
+    build:
+      context: ../..
+      dockerfile: apps/cloud-start-page/Dockerfile
     ports:
       - "3000:3000"
     volumes:
