@@ -5,6 +5,7 @@
 .nitro
 .cache
 dist
+dist_keycloak
 
 # Node dependencies
 node_modules

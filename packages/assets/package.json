@@ -1,0 +1,15 @@
+{
+  "name": "@cloud-start-page/assets",
+  "version": "1.0.0",
+  "description": "Shared static assets for cloud-start-page monorepo",
+  "license": "MIT",
+  "exports": {
+    "./mean-robot.svg": "./mean-robot.svg",
+    "./mean-robot-fat.svg": "./mean-robot-fat.svg"
+  },
+  "files": [
+    "*.svg",
+    "*.png",
+    "*.ico"
+  ]
+}

@@ -5,7 +5,7 @@ const canvas = ref<HTMLCanvasElement | null>(null);
 let controller: ReturnType<typeof createMatrixRain> | null = null;
 
 onMounted(() => {
-  controller = createMatrixRain(canvas.value!);
+  controller = createMatrixRain(canvas.value!, { color: [255, 94, 31], headColor: [255, 240, 220] });
 });
 
 onUnmounted(() => {
