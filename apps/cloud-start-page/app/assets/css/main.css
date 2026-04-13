@@ -1,35 +1,6 @@
 @import "tailwindcss";
 @import "@nuxt/ui";
-
-@theme static {
-  --font-sans: "Public Sans", sans-serif;
-
-  /* Primary: #FF5E1F (orange) */
-  --color-brand-50: #fff4ee;
-  --color-brand-100: #ffe4d0;
-  --color-brand-200: #ffc7a0;
-  --color-brand-300: #ffa070;
-  --color-brand-400: #ff7b43;
-  --color-brand-500: #ff5e1f;
-  --color-brand-600: #e84a07;
-  --color-brand-700: #ba3c06;
-  --color-brand-800: #8c2d05;
-  --color-brand-900: #6c2104;
-  --color-brand-950: #420f02;
-
-  /* Secondary: #1FC0FF (cyan) */
-  --color-accent-50: #eef9ff;
-  --color-accent-100: #d5f2ff;
-  --color-accent-200: #aaeaff;
-  --color-accent-300: #6fdaff;
-  --color-accent-400: #43ccff;
-  --color-accent-500: #1fc0ff;
-  --color-accent-600: #07aceb;
-  --color-accent-700: #0689be;
-  --color-accent-800: #046a93;
-  --color-accent-900: #045470;
-  --color-accent-950: #022f3f;
-}
+@import "@cloud-start-page/theme/index.css";
 
 /* Dark mode design tokens */
 .dark {

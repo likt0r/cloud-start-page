@@ -14,6 +14,7 @@
     "db:migrate": "tsx server/db/migrate.ts"
   },
   "dependencies": {
+    "@cloud-start-page/theme": "*",
     "matrix-rain": "*",
     "@iconify-json/lucide": "^1.2.98",
     "@iconify-json/simple-icons": "^1.2.74",

@@ -1,0 +1,16 @@
+{
+  "name": "@cloud-start-page/theme",
+  "version": "1.0.0",
+  "description": "Shared design tokens for cloud-start-page monorepo",
+  "license": "MIT",
+  "exports": {
+    ".": {
+      "style": "./index.css",
+      "default": "./index.css"
+    },
+    "./index.css": "./index.css"
+  },
+  "files": [
+    "index.css"
+  ]
+}

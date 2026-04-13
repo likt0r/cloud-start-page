@@ -1,4 +1,4 @@
-const glassSurface = "backdrop-blur-md !bg-black/5 ring-white/5";
+const glassSurface = "!glass-panel";
 
 export default defineAppConfig({
   ui: {
