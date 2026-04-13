@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const { loggedIn } = useOidcAuth();
+const { loggedIn } = useAuth();
 
 const {
   data: categories,

@@ -11,7 +11,11 @@ export default defineNuxtConfig({
   runtimeConfig: {
     uploadDir: ".data/uploads",
     adminGroup: "cloud-admins",
-    dbPath: ".data/db.sqlite"
+    dbPath: ".data/db.sqlite",
+    devAuthBypass: false,
+    public: {
+      devAuthBypass: false
+    }
   },
 
   devtools: {

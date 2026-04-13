@@ -6,8 +6,14 @@ import { getUserSession } from "../utils/oidc-session";
 export default defineEventHandler(async (event) => {
   await assertAuthenticated(event);
 
-  const session = await getUserSession(event);
-  const userGroups = ((session.userInfo?.groups ?? session.claims?.groups) as string[] | undefined) ?? [];
+  const config = useRuntimeConfig(event);
+  let userGroups: string[] = [];
+  if (config.devAuthBypass) {
+    userGroups = [config.adminGroup].filter(Boolean);
+  } else {
+    const session = await getUserSession(event);
+    userGroups = ((session.userInfo?.groups ?? session.claims?.groups) as string[] | undefined) ?? [];
+  }
 
   const allCategories = await db.query.categories.findMany({
     orderBy: [asc(categories.sortOrder)],

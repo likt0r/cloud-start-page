@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const { loggedIn, logout } = useOidcAuth();
+const { loggedIn, logout } = useAuth();
 
 const { data: settings } = await useFetch("/api/settings", { key: "site-settings", server: true });
 const { data: me } = await useFetch("/api/me", { immediate: loggedIn.value, server: true });

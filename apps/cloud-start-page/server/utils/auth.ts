@@ -1,7 +1,13 @@
 import type { H3Event } from "h3";
 import { getUserSession } from "./oidc-session";
 
+function isDevBypass(event: H3Event): boolean {
+  return !!useRuntimeConfig(event).devAuthBypass;
+}
+
 export async function assertAuthenticated(event: H3Event): Promise<void> {
+  if (isDevBypass(event)) return;
+
   const session = await getUserSession(event);
   if (!session?.userName && !session?.userInfo) {
     throw createError({ statusCode: 401, message: "Unauthorized" });
@@ -9,6 +15,8 @@ export async function assertAuthenticated(event: H3Event): Promise<void> {
 }
 
 export async function assertAdmin(event: H3Event): Promise<void> {
+  if (isDevBypass(event)) return;
+
   const session = await getUserSession(event);
   if (!session?.userName && !session?.userInfo) {
     throw createError({ statusCode: 401, message: "Unauthorized" });

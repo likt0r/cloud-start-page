@@ -3,7 +3,7 @@ const { data: settings } = await useFetch("/api/settings", { key: "site-settings
 
 const pageTitle = computed(() => settings.value?.pageTitle || "Cloud Start Page");
 const faviconPath = computed(() => settings.value?.logoSmallPath || "/logo-small.svg");
-const { loggedIn } = useOidcAuth();
+const { loggedIn } = useAuth();
 useHead({
   meta: [{ name: "viewport", content: "width=device-width, initial-scale=1" }],
   link: [{ rel: "icon", href: faviconPath }],
