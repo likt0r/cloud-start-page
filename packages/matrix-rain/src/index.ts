@@ -195,8 +195,9 @@ function simStep(s: Sim, c: Cfg, warmup = false): void {
       if (r < 0 || r >= rows) continue;
       const idx = r * cols + e.col;
       if (!charIdx[idx]) continue;
-      alpha[idx] -= c.eraserStrength;
-      if (alpha[idx] <= 0) {
+      const newAlpha = (alpha[idx] ?? 0) - c.eraserStrength;
+      alpha[idx] = newAlpha;
+      if (newAlpha <= 0) {
         charIdx[idx] = 0;
         alpha[idx] = 0;
       }
@@ -258,7 +259,7 @@ function prepareRenderData(s: Sim, c: Cfg, renderAlpha: Uint8Array, headReveal: 
   const n = rows * cols;
 
   for (let i = 0; i < n; i++)
-    renderAlpha[i] = charIdx[i] ? Math.min(255, Math.round(alpha[i] * c.baseAlpha * 255)) : 0;
+    renderAlpha[i] = charIdx[i] ? Math.min(255, Math.round((alpha[i] ?? 0) * c.baseAlpha * 255)) : 0;
   headReveal.fill(0);
 
   for (const w of writers) {
@@ -327,7 +328,7 @@ function createCanvas2DRenderer(canvas: HTMLCanvasElement, c: Cfg): MatrixRainIn
         const i = r * cols + col;
         const ci = charIdx[i];
         if (!ci) continue;
-        const a = renderAlpha[i];
+        const a = renderAlpha[i] ?? 0;
         if (a < 2) continue;
         const af = (a / 255).toFixed(3);
         const ch = c.chars[ci - 1]!;
