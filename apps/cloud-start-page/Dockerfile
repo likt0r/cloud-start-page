@@ -12,11 +12,13 @@ RUN apk add --no-cache python3 make g++
 COPY package.json package-lock.json ./
 COPY apps/cloud-start-page/package.json ./apps/cloud-start-page/
 COPY packages/matrix-rain/package.json ./packages/matrix-rain/
+COPY packages/theme/package.json ./packages/theme/
 RUN npm ci
 
 # Copy source
 COPY apps/cloud-start-page ./apps/cloud-start-page
 COPY packages/matrix-rain ./packages/matrix-rain
+COPY packages/theme ./packages/theme
 
 WORKDIR /app/apps/cloud-start-page
 RUN npm run build
@@ -33,6 +35,7 @@ WORKDIR /app
 COPY package.json package-lock.json ./
 COPY apps/cloud-start-page/package.json ./apps/cloud-start-page/
 COPY packages/matrix-rain/package.json ./packages/matrix-rain/
+COPY packages/theme/package.json ./packages/theme/
 RUN npm ci --omit=dev && npm install tsx
 
 WORKDIR /app/apps/cloud-start-page
