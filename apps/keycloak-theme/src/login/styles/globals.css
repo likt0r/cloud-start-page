@@ -1,0 +1,24 @@
+@import "tailwindcss";
+@import "@cloud-start-page/theme/index.css";
+
+html,
+body {
+    background-color: #000000;
+    min-height: 100vh;
+    font-family: var(--font-sans);
+    color-scheme: dark;
+}
+
+@keyframes logo-pulse {
+    0%, 100% { transform: scale(1);    filter: drop-shadow(0 0 0px transparent); }
+    50%       { transform: scale(1.04); filter: drop-shadow(0 0 18px #ff5e1f88); }
+}
+
+.animate-logo-pulse {
+    animation: logo-pulse 3s ease-in-out infinite;
+}
+
+/* #root must not set a background so the fixed canvas at z-0 is visible through it */
+#root {
+    min-height: 100vh;
+}
