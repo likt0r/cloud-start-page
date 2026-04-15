@@ -11,6 +11,7 @@
         "dev": "vite",
         "build": "tsc && vite build",
         "build-keycloak-theme": "npm run build && keycloakify build",
+        "release": "npm run build-keycloak-theme",
         "storybook": "storybook dev -p 6006",
         "format": "prettier . --write"
     },
